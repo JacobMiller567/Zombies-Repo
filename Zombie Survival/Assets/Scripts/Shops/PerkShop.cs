@@ -9,22 +9,25 @@ public class PerkShop : MonoBehaviour
     [SerializeField] private Material offMaterial;
 
     [Header("Types of Perks:")]
-    [SerializeField] private PerkData MuscleJuice;
+    [SerializeField] private PerkData IronSkin;
     [SerializeField] private PerkData SpeedJuice;
+    [SerializeField] private PerkData MuscleJuice;
 
-    private bool muscleJuiceBought = false;
+
+    private bool ironSkinBought = false;
     private bool speedJuiceBought = false;
+    private bool muscleJuiceBought = false;
 
 
     public void BuyPerk(PerkData type)
     {
         if (type == MuscleJuice) 
         {
-            if (PlayerVitals.instance.money >= MuscleJuice.price && !muscleJuiceBought)
+            if (PlayerVitals.instance.money >= IronSkin.price && !ironSkinBought)
             {
-                PlayerVitals.instance.money -= MuscleJuice.price;
+                PlayerVitals.instance.money -= IronSkin.price;
                 PlayerInventory.instance.ApplyPerk(0);
-                muscleJuiceBought = true;
+                ironSkinBought = true;
                 // Make screen turn black after purchase
                 AllPerks[0].GetComponent<Renderer>().material = offMaterial;
                 Debug.Log("Muscle Juice Bought!");
@@ -39,6 +42,18 @@ public class PerkShop : MonoBehaviour
                 speedJuiceBought = true;
                 // Make screen turn black after purchase
                 AllPerks[1].GetComponent<Renderer>().material = offMaterial;
+                Debug.Log("Speed Juice Bought!");
+            }
+        }
+        if (type == MuscleJuice) 
+        {
+            if (PlayerVitals.instance.money >= MuscleJuice.price && !muscleJuiceBought)
+            {
+                PlayerVitals.instance.money -= MuscleJuice.price;
+                PlayerInventory.instance.ApplyPerk(2);
+                muscleJuiceBought = true;
+                // Make screen turn black after purchase
+                AllPerks[2].GetComponent<Renderer>().material = offMaterial;
                 Debug.Log("Speed Juice Bought!");
             }
         }

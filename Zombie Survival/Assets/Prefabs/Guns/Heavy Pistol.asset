@@ -14,10 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Heavy Pistol
   price: 150
-  damage: 10
+  damage: 9
   maxRange: 150
   ammo: 20
   magazineSize: 160
   fireRate: 90
   reloadSpeed: 2
   reloading: 0
+  upgraded: 0
+  upgradedDamage: 12
+  upgradedMaxRange: 200
+  upgradedAmmo: 30
+  upgradedMagazineSize: 200
+  upgradedFireRate: 150
+  upgradedReloadSpeed: 2.3

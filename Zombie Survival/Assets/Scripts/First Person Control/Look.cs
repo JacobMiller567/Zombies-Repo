@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(99)]
 public class Look : MonoBehaviour // More complex then then other scripts
 {
     public float sensitivity = 1;
@@ -10,7 +11,7 @@ public class Look : MonoBehaviour // More complex then then other scripts
     private Transform charCamera;
     private Vector2 currentMouseLook;
     private Vector2 appliedMouseDelta;
-
+    
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked; // Used to make it so the cursor wont move around on the screen or outside of the application

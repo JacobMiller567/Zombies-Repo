@@ -5,8 +5,11 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory instance;
-    public List<GameObject> guns;
+    public List<GameObject> guns; // All guns unlocked
+    public List<GameObject> activeGuns; // Current guns that can be used
+    public int maxGunSlots = 2; // Max number of guns used at a time
     public int gunIndex = 0;
+    [SerializeField] private GunShop shop;
 
     private void Awake()
     {
@@ -16,34 +19,71 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-     void Update()
-     {
+    void Update()
+    {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            gunIndex = (gunIndex + 1) % guns.Count;
+            gunIndex = (gunIndex + 1) % activeGuns.Count;
             ChangeWeapon(gunIndex);
         }
-     }
+    }
 
     public void ChangeWeapon(int index) // MAKE IT SO RELOADING WILL CONTINUE AFTER SWITCHING BACK WEAPONS??
-    {
-        foreach (var gun in guns)
+    {    
+        foreach (var gun in activeGuns)
         {
             gun.SetActive(false);
         }
-        guns[index].SetActive(true);
-        AmmoDisplay.instance?.WeaponChanged(guns[index].GetComponentInChildren<Gun>().GetGunData());
+        activeGuns[index].SetActive(true);
+        AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());    
     }
 
     public void UnlockGun(GameObject newGun)  
     {
         guns.Add(newGun);
+
+        if (activeGuns.Count < maxGunSlots) // if slots are not full
+        {
+            activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
+        }
+        else // if slots are full
+        {
+            activeGuns[gunIndex].SetActive(false);
+            shop.OnGunsChanged();
+            activeGuns.RemoveAt(gunIndex); // remove current gun
+            activeGuns.Insert(gunIndex, newGun); // add gun to current slot
+        }
+        ChangeWeapon(gunIndex);
     }
 
-    public void AddAmmo()//(int index)
+    public void EquipGun(GameObject newGun)
     {
-        //guns[index].GetComponentInChildren<Gun>().RefillAmmo();
-        guns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
+        if (activeGuns.Count < maxGunSlots) // if slots are not full
+        {
+            activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
+        }
+        else // if slots are full
+        {
+            activeGuns[gunIndex].SetActive(false);
+            shop.OnGunsChanged();
+            activeGuns.RemoveAt(gunIndex); // remove current gun
+            activeGuns.Insert(gunIndex, newGun); // add gun to current slot
+        }
+        ChangeWeapon(gunIndex);
+    }
+
+    public void RemoveGun(GameObject currentGun)
+    {
+        activeGuns[gunIndex].SetActive(false);
+        activeGuns.RemoveAt(gunIndex); // remove current gun
+        gunIndex = (gunIndex + 1) % activeGuns.Count;
+        ChangeWeapon(gunIndex);
+    }
+
+    public void AddAmmo()
+    {
+       // guns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
+       activeGuns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
     }
 
     public void ApplyPerk(int index)
@@ -54,9 +94,12 @@ public class PlayerInventory : MonoBehaviour
         }
         if (index == 1)
         {
-            Move.instance.IncreaseSpeed(1);
+            PlayerMovement.instance.IncreaseSpeed(1f, 50f);
         }
-
+        if (index == 2)
+        {
+            maxGunSlots += 1;
+        }
     }
 
     public int GetIndex()

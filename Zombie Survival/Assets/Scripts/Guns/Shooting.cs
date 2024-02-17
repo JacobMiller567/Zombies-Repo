@@ -5,17 +5,28 @@ using System;
 
 public class Shooting : MonoBehaviour
 {
+    public static Shooting Instance;
     public static Action inputShooting;
     public static Action inputReloading;
 
     public Camera cam;
-    public Camera gunCam; // TEST
+    public Camera gunCam; 
     public float normalFov = 60;
     public float multiplier = 2;
     public float zoomTime = 1;
+    public bool isZooming = false;
 
     [SerializeField] private KeyCode reloadKey = KeyCode.R;
     // [SerializeField] private AudioSource reloadAudio;
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     private void Update()
     {
@@ -40,10 +51,12 @@ public class Shooting : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             ZoomCamera(normalFov / multiplier);
+            isZooming = true;
         }
         else if (cam.fieldOfView != normalFov)
         {
             ZoomCamera(normalFov);
+            isZooming = false;
         }
     }
     private void ZoomCamera(float target)

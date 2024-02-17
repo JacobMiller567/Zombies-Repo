@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MuscleJuice
   m_EditorClassIdentifier: 
   name: Muscle Juice
-  price: 500
-  boostAmount: 100
+  price: 750
+  boostAmount: 1

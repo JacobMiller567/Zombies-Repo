@@ -18,6 +18,7 @@ public class ZombieSpawner : MonoBehaviour
     [SerializeField] private float spawnSpeed;
     [SerializeField] private float waveCoolDown;
     [SerializeField] private float difficultyScaler;
+    [SerializeField] private int maxZombiesAtOnce = 40;
 
     private float timeSinceLastSpawn;
     private int enemiesAlive;
@@ -28,6 +29,14 @@ public class ZombieSpawner : MonoBehaviour
     private void Awake()
     {
         onZombieKilled.AddListener(OnDestroy); // add listener to call for enemy deaths
+        ResetHealthAmount();
+        InvokeRepeating("CheckAlive", 2f, 2f); // DELETE
+    }
+
+    public void CheckAlive() // DELETE
+    {
+        Debug.Log("Alive: " + enemiesAlive);
+        Debug.Log("Left to Spawn: " + enemiesLeftToSpawn);
     }
     
     private void Start()
@@ -36,11 +45,11 @@ public class ZombieSpawner : MonoBehaviour
         StartCoroutine(StartGame());
     }
 
-    private void Update()
+    private void Update() // Maybe put in coroutine so it doesn't check every frame?
     {
         if (!waveActive) return;
         timeSinceLastSpawn += Time.deltaTime;
-        if (timeSinceLastSpawn >= spawnSpeed && enemiesLeftToSpawn > 0)
+        if (timeSinceLastSpawn >= spawnSpeed && enemiesLeftToSpawn > 0 && enemiesAlive < maxZombiesAtOnce) // && enemiesAlive < maxZombiesAtOnce
         {
             SpawnEnemy();
             enemiesLeftToSpawn--;
@@ -57,7 +66,11 @@ public class ZombieSpawner : MonoBehaviour
     private void OnDestroy()
     {
         enemiesAlive--;
-       // Debug.Log("Enemies Left: " + enemiesAlive);
+        // Debug.Log("Enemies Left: " + enemiesAlive);
+        if (currentWave == 5 && enemiesAlive == 1 && enemiesLeftToSpawn == 0)
+        {
+            
+        }
     }
 
     private IEnumerator StartGame()
@@ -88,7 +101,10 @@ public class ZombieSpawner : MonoBehaviour
 
     private int IncreaseEnemies()
     {
-        //UpgradeEnemyHealth();
+        if (currentWave == 15)
+        {
+            UpgradeEnemyHealth();
+        }
         Debug.Log("New enemy amount: " + Mathf.RoundToInt(enemyAmount * Mathf.Pow(currentWave, difficultyScaler)));
         return Mathf.RoundToInt(enemyAmount * Mathf.Pow(currentWave, difficultyScaler));
     }
@@ -96,7 +112,7 @@ public class ZombieSpawner : MonoBehaviour
     private void SpawnEnemy()
     {
         int zombieType = 0;
-        if (currentWave > 9 && currentWave <= 19)
+        if (currentWave > 9 && currentWave <= 15)
         {
             float chooseEnemy = Random.Range(0, 5);
             if (chooseEnemy == 0) // 20%
@@ -127,6 +143,19 @@ public class ZombieSpawner : MonoBehaviour
         int randomIndex = Random.Range(0, spawnLocations.Count - 1);
         GameObject zombiePrefab = zombies[zombieType];
         Instantiate(zombiePrefab,spawnLocations[randomIndex].position, Quaternion.identity);
+    }
+
+    public void UpgradeEnemyHealth()
+    {
+        zombies[0].GetComponent<ZombieVitals>().IncreaseHealth(5);
+    }
+
+    private void ResetHealthAmount()
+    {
+        foreach (GameObject zombie in zombies)
+        {
+            zombie.GetComponent<ZombieVitals>().ResetHealth();
+        }
     }
 
 }

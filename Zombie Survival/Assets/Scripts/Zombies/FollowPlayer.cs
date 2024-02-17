@@ -55,7 +55,33 @@ public class FollowPlayer : MonoBehaviour
     /// Attack when zombie collides with player
     /// Continue attacking when animation ends
     /// </summary>
-    
+    /// 
+
+/*
+    void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+          //  Debug.Log("Initial Hit!");
+            animator.SetTrigger("Attack");
+            animator.SetBool("AttackEvent", true);
+          //  Damage player = collision.gameObject.transform.GetComponent<Damage>();
+          //  player?.TakeDamage(25);
+        }
+    }
+    void OnTriggerStay(Collider collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && animator.GetBool("AttackEvent") == false)
+        {
+          //  Debug.Log("Continous Hit!");
+            animator.SetTrigger("Attack");
+            animator.SetBool("AttackEvent", true);
+        }
+    }
+*/
+
+
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -76,6 +102,7 @@ public class FollowPlayer : MonoBehaviour
             animator.SetBool("AttackEvent", true);
         }
     }
+    
 
     public void AttackEnd() // Animation Event
     {

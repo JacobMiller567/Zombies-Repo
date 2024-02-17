@@ -34,7 +34,7 @@ public class SpinBox : MonoBehaviour
 
     IEnumerator CheckForPurchase()
     {
-        while (canBuy)
+        while (canBuy && !MysteryBox.instance.isSpinning)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -43,7 +43,7 @@ public class SpinBox : MonoBehaviour
                     PlayerVitals.instance.money -= price;
                     MysteryBox.instance.StartSpin();
                     animator.SetTrigger("Purchased");
-                    canBuy = false;
+                    //canBuy = false;
                 }
             }
             yield return null;

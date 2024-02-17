@@ -18,6 +18,13 @@ MonoBehaviour:
   maxRange: 150
   ammo: 26
   magazineSize: 280
-  fireRate: 700
-  reloadSpeed: 1.5
+  fireRate: 680
+  reloadSpeed: 1.2
   reloading: 0
+  upgraded: 0
+  upgradedDamage: 6
+  upgradedMaxRange: 200
+  upgradedAmmo: 32
+  upgradedMagazineSize: 300
+  upgradedFireRate: 725
+  upgradedReloadSpeed: 1

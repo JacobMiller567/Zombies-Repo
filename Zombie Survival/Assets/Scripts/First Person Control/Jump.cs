@@ -6,6 +6,8 @@ using UnityEngine;
 public class Jump : MonoBehaviour
 {
     public float jumpStrength = 5;
+    public float jumpCooldown = 0.5f; // Cooldown period between jumps
+     private float lastJumpTime; // Time when the last jump occurred
     public KeyCode jumpKey = KeyCode.Space; // Spacebar
 
     private Rigidbody rb;
@@ -16,11 +18,12 @@ public class Jump : MonoBehaviour
         rb = GetComponent<Rigidbody>(); // Get the rigidbody component from our player
     }
 
-    void Update()
+    void Update() //FixedUpdate()
     {
-        if (Input.GetKeyDown(jumpKey) && isGrounded) // If spacebar is pressed and player is touching the ground
+        if (Input.GetKeyDown(jumpKey) && isGrounded && Time.time - lastJumpTime >= jumpCooldown) // If spacebar is pressed and player is touching the ground
         {
-            rb.AddForce(rb.transform.up * jumpStrength, ForceMode.Impulse); // add upwards force based on our jumpStrength instantly. 
+            rb.AddForce(rb.transform.up * jumpStrength, ForceMode.Impulse); // add upwards force based on our jumpStrength instantly.
+            lastJumpTime = Time.time; 
         }
     }
 

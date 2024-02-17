@@ -12,10 +12,26 @@ public class Gun : MonoBehaviour
    // [SerializeField] private LayerMask bodyLayerMask; // TEST
     [SerializeField] private GameObject bulletHole;
     //private AudioSource gunAudio;
+    [SerializeField] private bool isShotgun;
     [SerializeField] private bool UnlimitedAmmo = false;
     float timeLastShot;
     private Coroutine reloadCoroutine;
     private bool isActive = false;
+
+    [SerializeField] private float shotgunPellets = 6;
+    [SerializeField] private float shotgunSpreadAngle = 25;
+
+    // TEST BELOW //
+   // [SerializeField] private Recoil gunRecoil;
+    
+    public float recoilForce = 0.5f;
+    public float recoilRecoverySpeed = 2f;
+    public float maxRecoil = 2f;
+    private Vector3 initialRotation;
+    private Vector3 recoil;
+    //[SerializeField] private Recoil recoilComponent;
+    
+    // END OF TEST //
     
     void OnEnable()
     {
@@ -32,6 +48,10 @@ public class Gun : MonoBehaviour
         Shooting.inputShooting += Shoot;
         Shooting.inputReloading += StartReload;
        //gunAudio = GetComponent<AudioSource>();
+       // TEST: 
+        //recoil = Vector3.Lerp(recoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
+        //transform.localEulerAngles = initialRotation + recoil;
+
     }
 
 
@@ -39,6 +59,12 @@ public class Gun : MonoBehaviour
     {
         timeLastShot += Time.deltaTime;
         Debug.DrawRay(muzzle.position, muzzle.forward);
+
+        //TEST
+        recoil = Vector3.Lerp(recoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
+        transform.localEulerAngles = initialRotation + recoil;
+
+
     }
 
     public void StartReload()
@@ -81,7 +107,7 @@ public class Gun : MonoBehaviour
             gunData.RuntimeAmmo = Mathf.Min(gunData.ammo, remainingTotalAmmo);
             gunData.RuntimeMagazine = Mathf.Max(0, gunData.RuntimeMagazine - bulletsUsed);
         }
-        AmmoDisplay.instance.UpdateAmmo(); // ADDED
+        AmmoDisplay.instance.UpdateAmmo();
         gunData.reloading = false;
     }
 
@@ -93,9 +119,76 @@ public class Gun : MonoBehaviour
         {
             if (CanShoot())
             {
-                if (Physics.Raycast(muzzle.position, transform.forward, out RaycastHit hitInfo, gunData.maxRange)) // ADD: Try to fix layers so headshots do 1.5x damage
+                float _recoilForce = recoilForce;
+                float _recoilRecoverySpeed = recoilRecoverySpeed;
+
+                if (Shooting.Instance.isZooming)
                 {
-                    /*
+                    // Apply reduced recoil for zoomed-in state
+                    _recoilForce *= 0.5f; // Adjust the recoil force to make it easier to control
+                    _recoilRecoverySpeed *= 0.5f; // Adjust the recoil recovery speed accordingly
+                }
+                //TEST
+                //gunRecoil.ApplyRecoil(); // TEST 
+                recoil += new Vector3(Random.Range(-_recoilForce, _recoilForce), Random.Range(-_recoilForce, _recoilForce), 0);
+                recoil = Vector3.ClampMagnitude(recoil, maxRecoil);
+                if (isShotgun)
+                {
+                    for (int i = 0; i < shotgunPellets; i++)
+                    {
+                        Vector3 spreadDirection = CalculateSpreadDirection();
+
+                        if (Physics.Raycast(muzzle.position, spreadDirection, out RaycastHit hitInfo, gunData.maxRange))
+                        {
+                            Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                            damagable?.TakeDamage(gunData.RuntimeDamage);
+
+                            if (muzzleFlash.isPlaying)
+                            { 
+                                muzzleFlash.Stop();
+                            }        
+                            muzzleFlash.Play();
+                        }
+                    }
+                    gunData.RuntimeAmmo--;
+                    AmmoDisplay.instance.UpdateAmmo();
+                    timeLastShot = 0;
+                    GunShot();
+                }
+                else
+                {
+                    Vector3 raycastDirection = transform.forward;
+                    raycastDirection = Quaternion.Euler(recoil) * raycastDirection;
+                    if (Physics.Raycast(muzzle.position, raycastDirection, out RaycastHit hitInfo, gunData.maxRange))
+                    {                  
+                        Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                        damagable?.TakeDamage(gunData.RuntimeDamage);
+
+                        if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
+                        {
+                            Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
+                        }
+                    }
+                    if (muzzleFlash.isPlaying)
+                    { 
+                        muzzleFlash.Stop();
+                    }   
+                    muzzleFlash.Play();
+                    gunData.RuntimeAmmo--;
+                    AmmoDisplay.instance.UpdateAmmo();
+                    timeLastShot = 0;
+                    GunShot();
+                }              
+            }
+        }
+    }
+    private Vector3 CalculateSpreadDirection()
+    {
+        Vector2 randomSpread = Random.insideUnitCircle * shotgunSpreadAngle;
+        Vector3 spreadDirection = transform.forward + transform.right * randomSpread.x + transform.up * randomSpread.y;
+        return spreadDirection.normalized;
+    }
+                /*
                     // gunAudio.Play();
                     //if (((1 << hitInfo.transform.gameObject.layer) & headLayerMask) != 0)
                     if (hitInfo.transform.gameObject.layer == headLayerMask)
@@ -121,23 +214,7 @@ public class Gun : MonoBehaviour
                        // Damage damagable = hitInfo.transform.GetComponent<Damage>();
                        // damagable?.TakeDamage(gunData.RuntimeDamage);
                     }
-                    */
-                    
-                    Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                    damagable?.TakeDamage(gunData.RuntimeDamage);
-                }
-                if (muzzleFlash.isPlaying)
-                { 
-                    muzzleFlash.Stop();
-                }        
-                muzzleFlash.Play();
-                gunData.RuntimeAmmo--;
-                AmmoDisplay.instance.UpdateAmmo(); // ADDED
-                timeLastShot = 0;
-                GunShot();
-            }
-        }
-    }
+                */
 
     public GunData GetGunData()
     {

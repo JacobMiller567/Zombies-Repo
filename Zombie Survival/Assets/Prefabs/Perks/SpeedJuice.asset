@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SpeedJuice
   m_EditorClassIdentifier: 
   name: Speed Juice
-  price: 400
+  price: 500
   boostAmount: 1

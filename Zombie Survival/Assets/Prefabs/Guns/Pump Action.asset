@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423c6c6c2583df94a9f374bf30ebd2b5, type: 3}
+  m_Name: Pump Action
+  m_EditorClassIdentifier: 
+  name: Pump Action
+  price: 650
+  damage: 6
+  maxRange: 12
+  ammo: 8
+  magazineSize: 78
+  fireRate: 75
+  reloadSpeed: 3.1
+  reloading: 0
+  upgraded: 0
+  upgradedDamage: 8
+  upgradedMaxRange: 15
+  upgradedAmmo: 10
+  upgradedMagazineSize: 95
+  upgradedFireRate: 105
+  upgradedReloadSpeed: 2.8

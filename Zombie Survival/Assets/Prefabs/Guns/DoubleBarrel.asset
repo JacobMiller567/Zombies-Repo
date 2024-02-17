@@ -14,10 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: DoubleBarrel
   price: 300
-  damage: 15
-  maxRange: 15
-  ammo: 2
+  damage: 6
+  maxRange: 10
+  ammo: 4
   magazineSize: 64
   fireRate: 50
   reloadSpeed: 3
   reloading: 0
+  upgraded: 0
+  upgradedDamage: 8
+  upgradedMaxRange: 11
+  upgradedAmmo: 6
+  upgradedMagazineSize: 72
+  upgradedFireRate: 85
+  upgradedReloadSpeed: 2.75
