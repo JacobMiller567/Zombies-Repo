@@ -112,7 +112,7 @@ public class ZombieSpawner : MonoBehaviour
     private void SpawnEnemy()
     {
         int zombieType = 0;
-        if (currentWave > 9 && currentWave <= 15)
+        if (currentWave > 9 && currentWave <= 19)
         {
             float chooseEnemy = Random.Range(0, 5);
             if (chooseEnemy == 0) // 20%
@@ -131,7 +131,7 @@ public class ZombieSpawner : MonoBehaviour
             {
                 zombieType = 2;
             }
-            if (chooseEnemy > 0 && chooseEnemy < 3) // 40%
+            else if (chooseEnemy > 0 && chooseEnemy < 3) // 40%
             {
                 zombieType = 1;
             }

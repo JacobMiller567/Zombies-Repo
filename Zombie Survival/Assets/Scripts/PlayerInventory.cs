@@ -19,6 +19,11 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        activeGuns[gunIndex].SetActive(true);
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
@@ -35,18 +40,18 @@ public class PlayerInventory : MonoBehaviour
             gun.SetActive(false);
         }
         activeGuns[index].SetActive(true);
-        AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());    
+        AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());
     }
 
     public void UnlockGun(GameObject newGun)  
     {
         guns.Add(newGun);
 
-        if (activeGuns.Count < maxGunSlots) // if slots are not full
+        if (activeGuns.Count < maxGunSlots)
         {
             activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
         }
-        else // if slots are full
+        else 
         {
             activeGuns[gunIndex].SetActive(false);
             shop.OnGunsChanged();
@@ -62,7 +67,7 @@ public class PlayerInventory : MonoBehaviour
         {
             activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
         }
-        else // if slots are full
+        else 
         {
             activeGuns[gunIndex].SetActive(false);
             shop.OnGunsChanged();
@@ -82,7 +87,6 @@ public class PlayerInventory : MonoBehaviour
 
     public void AddAmmo()
     {
-       // guns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
        activeGuns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
     }
 

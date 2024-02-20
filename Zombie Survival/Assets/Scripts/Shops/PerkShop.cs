@@ -13,7 +13,6 @@ public class PerkShop : MonoBehaviour
     [SerializeField] private PerkData SpeedJuice;
     [SerializeField] private PerkData MuscleJuice;
 
-
     private bool ironSkinBought = false;
     private bool speedJuiceBought = false;
     private bool muscleJuiceBought = false;
@@ -21,7 +20,7 @@ public class PerkShop : MonoBehaviour
 
     public void BuyPerk(PerkData type)
     {
-        if (type == MuscleJuice) 
+        if (type == IronSkin) // Increase Health
         {
             if (PlayerVitals.instance.money >= IronSkin.price && !ironSkinBought)
             {
@@ -30,10 +29,10 @@ public class PerkShop : MonoBehaviour
                 ironSkinBought = true;
                 // Make screen turn black after purchase
                 AllPerks[0].GetComponent<Renderer>().material = offMaterial;
-                Debug.Log("Muscle Juice Bought!");
+                Debug.Log("Iron Skin Bought!");
             }
         }
-        if (type == SpeedJuice) 
+        if (type == SpeedJuice) // Increase Speed and Stamina
         {
             if (PlayerVitals.instance.money >= SpeedJuice.price && !speedJuiceBought)
             {
@@ -45,7 +44,7 @@ public class PerkShop : MonoBehaviour
                 Debug.Log("Speed Juice Bought!");
             }
         }
-        if (type == MuscleJuice) 
+        if (type == MuscleJuice) // Increase Gun carry amount
         {
             if (PlayerVitals.instance.money >= MuscleJuice.price && !muscleJuiceBought)
             {
@@ -54,7 +53,7 @@ public class PerkShop : MonoBehaviour
                 muscleJuiceBought = true;
                 // Make screen turn black after purchase
                 AllPerks[2].GetComponent<Renderer>().material = offMaterial;
-                Debug.Log("Speed Juice Bought!");
+                Debug.Log("Muscle Juice Bought!");
             }
         }
     }

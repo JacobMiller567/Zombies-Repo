@@ -9,6 +9,7 @@ public class Look : MonoBehaviour // More complex then then other scripts
     public float smoothing = 2;
 
     private Transform charCamera;
+    //[SerializeField] Transform gunCamera; // TEST
     private Vector2 currentMouseLook;
     private Vector2 appliedMouseDelta;
     
@@ -26,7 +27,8 @@ public class Look : MonoBehaviour // More complex then then other scripts
         currentMouseLook += appliedMouseDelta; // Add the appliedMouseDelta to the currentMouseLook
         currentMouseLook.y = Mathf.Clamp(currentMouseLook.y, -90, 90); // This will clamp the mouse y axis betweem -90 and 90
 
-        charCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // This will cause the charCamera to rotate around its local right axis by -currentMouseLook.y 
+        charCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // This will cause the charCamera to rotate around its local right axis by -currentMouseLook.y
+        //gunCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // TEST
         transform.localRotation = Quaternion.AngleAxis(currentMouseLook.x, Vector3.up); // This will cause the transform to rotate around its local up axis by currentMouseLook.x
     }
 }

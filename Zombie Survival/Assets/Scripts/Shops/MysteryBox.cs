@@ -10,7 +10,11 @@ public class MysteryBox : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rewardText;
     
     [SerializeField] private GameObject[] boxes;
+    [SerializeField] private List<GameObject> availableBoxes;
     public bool isSpinning = false;
+    public int maxSpins = 2;
+    public int currentSpins = 0;
+    private int lastLocation;
 
     void Awake()
     {
@@ -57,6 +61,7 @@ public class MysteryBox : MonoBehaviour
             rewardText.text = "Pump-Action Shotgun";
         }
 
+        currentSpins += 1;
         StartCoroutine(HideText());
     }
 
@@ -66,5 +71,19 @@ public class MysteryBox : MonoBehaviour
         yield return new WaitForSeconds(2f);
         reward.SetActive(false);
         isSpinning = false;
+
+        if (currentSpins > maxSpins)
+        {
+            foreach (GameObject box in boxes)
+            {
+                Debug.Log("Changing Locations");
+                box.SetActive(false);
+                boxes[Random.Range(0, boxes.Length)].SetActive(true); // Spawn random mystery box
+                //availableBoxes.
+                currentSpins = 0;
+            }
+        }
     }
+
+    
 }

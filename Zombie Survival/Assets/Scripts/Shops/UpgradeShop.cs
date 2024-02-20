@@ -21,6 +21,7 @@ public class UpgradeShop : MonoBehaviour
     public bool allowUpgrade = true;
     public bool upgradeComplete = false;
     public bool isCollected = false;
+    public int currentIndex = 0;
 
     private void Awake()
     {
@@ -89,6 +90,7 @@ public class UpgradeShop : MonoBehaviour
     }
     public void ShowUpgrading(int index)
     {
+        currentIndex = index;
         ShowcaseGuns[index].SetActive(true);
     }
 

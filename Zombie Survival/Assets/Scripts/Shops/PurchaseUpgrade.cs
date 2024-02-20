@@ -22,7 +22,7 @@ public class PurchaseUpgrade : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && !shop.allowUpgrade && shop.upgradeComplete)
         {
             costPopup.SetActive(true);
-            costText.text = "Press E to Claim: " + PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].GetComponentInChildren<Gun>().GetGunData().name;
+            costText.text = "Press E to Claim: " + shop.AllGuns[shop.currentIndex].GetComponentInChildren<Gun>().GetGunData().name;
             canBuy = true;
             StartCoroutine(CheckForClaim());
         }

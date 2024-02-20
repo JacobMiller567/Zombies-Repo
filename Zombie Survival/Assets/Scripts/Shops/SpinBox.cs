@@ -34,7 +34,7 @@ public class SpinBox : MonoBehaviour
 
     IEnumerator CheckForPurchase()
     {
-        while (canBuy && !MysteryBox.instance.isSpinning)
+        while (canBuy && !MysteryBox.instance.isSpinning && MysteryBox.instance.currentSpins <= MysteryBox.instance.maxSpins)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {

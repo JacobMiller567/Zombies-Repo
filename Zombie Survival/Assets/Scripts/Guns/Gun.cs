@@ -23,20 +23,18 @@ public class Gun : MonoBehaviour
 
     // TEST BELOW //
    // [SerializeField] private Recoil gunRecoil;
-    
     public float recoilForce = 0.5f;
     public float recoilRecoverySpeed = 2f;
     public float maxRecoil = 2f;
     private Vector3 initialRotation;
     private Vector3 recoil;
-    //[SerializeField] private Recoil recoilComponent;
-    
     // END OF TEST //
     
     void OnEnable()
     {
         isActive = true;
         gunData.reloading = false;
+        CrosshairManager.Instance.ChangeCrosshair(gunData.name);
     }
     void OnDisable()
     {
@@ -124,14 +122,14 @@ public class Gun : MonoBehaviour
 
                 if (Shooting.Instance.isZooming)
                 {
-                    // Apply reduced recoil for zoomed-in state
-                    _recoilForce *= 0.5f; // Adjust the recoil force to make it easier to control
+                    _recoilForce *= 0.5f; // Make recoil easier to control
                     _recoilRecoverySpeed *= 0.5f; // Adjust the recoil recovery speed accordingly
                 }
-                //TEST
-                //gunRecoil.ApplyRecoil(); // TEST 
-                recoil += new Vector3(Random.Range(-_recoilForce, _recoilForce), Random.Range(-_recoilForce, _recoilForce), 0);
-                recoil = Vector3.ClampMagnitude(recoil, maxRecoil);
+
+                Vector3 raycastDirection = transform.forward; // TEST
+                //Vector3 raycastDirection = muzzle.transform.forward;
+                raycastDirection = Quaternion.Euler(recoil) * raycastDirection; //TEST
+
                 if (isShotgun)
                 {
                     for (int i = 0; i < shotgunPellets; i++)
@@ -142,23 +140,17 @@ public class Gun : MonoBehaviour
                         {
                             Damage damagable = hitInfo.transform.GetComponent<Damage>();
                             damagable?.TakeDamage(gunData.RuntimeDamage);
-
-                            if (muzzleFlash.isPlaying)
-                            { 
-                                muzzleFlash.Stop();
-                            }        
-                            muzzleFlash.Play();
+                            // TEST SPREAD:
+                            Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));       
+                           // if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
+                          //  {
+                          //      Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
+                          //  }
                         }
                     }
-                    gunData.RuntimeAmmo--;
-                    AmmoDisplay.instance.UpdateAmmo();
-                    timeLastShot = 0;
-                    GunShot();
                 }
                 else
                 {
-                    Vector3 raycastDirection = transform.forward;
-                    raycastDirection = Quaternion.Euler(recoil) * raycastDirection;
                     if (Physics.Raycast(muzzle.position, raycastDirection, out RaycastHit hitInfo, gunData.maxRange))
                     {                  
                         Damage damagable = hitInfo.transform.GetComponent<Damage>();
@@ -169,52 +161,60 @@ public class Gun : MonoBehaviour
                             Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
                         }
                     }
-                    if (muzzleFlash.isPlaying)
-                    { 
-                        muzzleFlash.Stop();
-                    }   
-                    muzzleFlash.Play();
-                    gunData.RuntimeAmmo--;
-                    AmmoDisplay.instance.UpdateAmmo();
-                    timeLastShot = 0;
-                    GunShot();
-                }              
+                }
+                // gunAudio.Play();
+                recoil += new Vector3(Random.Range(-_recoilForce, _recoilForce), Random.Range(-_recoilForce, _recoilForce), 0); // TEST
+                recoil = Vector3.ClampMagnitude(recoil, maxRecoil); // TEST 
+                if (muzzleFlash.isPlaying)
+                { 
+                    muzzleFlash.Stop();
+                }   
+                muzzleFlash.Play();
+                gunData.RuntimeAmmo--;
+                AmmoDisplay.instance.UpdateAmmo();
+                timeLastShot = 0;
+                GunShot();
+
+                /*
+                //if (((1 << hitInfo.transform.gameObject.layer) & headLayerMask) != 0)
+                if (hitInfo.transform.gameObject.layer == headLayerMask)
+                {
+                    Debug.Log("HEAD SHOT!");
+                    Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                    damagable?.TakeDamage(gunData.RuntimeDamage);
+                }
+
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
+                {
+                    Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
+                }
+
+                else if (((1 << hitInfo.transform.gameObject.layer) & bodyLayerMask) != 0)
+                {
+                    Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                    damagable?.TakeDamage(gunData.RuntimeDamage);
+                    // Perform actions specific to hitting the zombie's body
+                }
+                else
+                {
+                    // Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                    // damagable?.TakeDamage(gunData.RuntimeDamage);
+                }
+                */                          
             }
         }
     }
     private Vector3 CalculateSpreadDirection()
     {
-        Vector2 randomSpread = Random.insideUnitCircle * shotgunSpreadAngle;
-        Vector3 spreadDirection = transform.forward + transform.right * randomSpread.x + transform.up * randomSpread.y;
+        Vector3 raycastDirection = transform.forward;
+        raycastDirection = Quaternion.Euler(recoil) * raycastDirection;
+
+        // Calculate spread direction with random variation with a cone based around the initial raycast
+        float spreadRadius = Mathf.Tan(Mathf.Deg2Rad * shotgunSpreadAngle);
+        Vector2 randomSpread = Random.insideUnitCircle * spreadRadius;
+        Vector3 spreadDirection = raycastDirection + transform.right * randomSpread.x + transform.up * randomSpread.y;
         return spreadDirection.normalized;
-    }
-                /*
-                    // gunAudio.Play();
-                    //if (((1 << hitInfo.transform.gameObject.layer) & headLayerMask) != 0)
-                    if (hitInfo.transform.gameObject.layer == headLayerMask)
-                    {
-                        Debug.Log("HEAD SHOT!");
-                        Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                        damagable?.TakeDamage(gunData.RuntimeDamage);
-                    }
-
-                    if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
-                    {
-                        Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
-                    }
-
-                    else if (((1 << hitInfo.transform.gameObject.layer) & bodyLayerMask) != 0)
-                    {
-                        Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                        damagable?.TakeDamage(gunData.RuntimeDamage);
-                        // Perform actions specific to hitting the zombie's body
-                    }
-                    else
-                    {
-                       // Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                       // damagable?.TakeDamage(gunData.RuntimeDamage);
-                    }
-                */
+    }              
 
     public GunData GetGunData()
     {
