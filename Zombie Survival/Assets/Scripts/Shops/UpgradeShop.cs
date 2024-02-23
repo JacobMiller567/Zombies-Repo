@@ -8,6 +8,8 @@ public class UpgradeShop : MonoBehaviour
     public List<GameObject> AllGuns;
     public List<GameObject> ShowcaseGuns;
 
+    [SerializeField] private Material decal;
+
     [Header("Shop Info:")]
     [SerializeField] private float upgradeTime = 180f;
     public int upgradeCost = 500;
@@ -17,6 +19,14 @@ public class UpgradeShop : MonoBehaviour
     [SerializeField] private GunData HeavyPistol;
     [SerializeField] private GunData AK47;
     [SerializeField] private GunData DoubleBarrel;
+    [SerializeField] private GunData PumpAction;
+    [SerializeField] private GunData MP7;
+    [SerializeField] private GunData MAC11;
+    [SerializeField] private GunData Ballista;
+    [SerializeField] private GunData AUG;
+    [SerializeField] private GunData AR15;
+    [SerializeField] private GunData FAMAS;
+    [SerializeField] private GunData Revolver;
 
     public bool allowUpgrade = true;
     public bool upgradeComplete = false;
@@ -77,6 +87,95 @@ public class UpgradeShop : MonoBehaviour
                 StartCoroutine(StartUpgrading(AllGuns[3], data));
             }
         }
+
+        if (data == PumpAction && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "PumpAction_SG" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(PumpAction.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[4]);
+                ShowUpgrading(4);
+                StartCoroutine(StartUpgrading(AllGuns[4], data));
+            }
+        }
+        if (data == MP7 && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "MP7_SMG" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(MP7.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[5]);
+                ShowUpgrading(5);
+                StartCoroutine(StartUpgrading(AllGuns[5], data));
+            }
+        }
+        if (data == MAC11 && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "MAC11_SMG" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(MAC11.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[6]);
+                ShowUpgrading(6);
+                StartCoroutine(StartUpgrading(AllGuns[6], data));
+            }
+        }
+        if (data == Ballista && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "Ballista_Sniper" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(Ballista.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[7]);
+                ShowUpgrading(7);
+                StartCoroutine(StartUpgrading(AllGuns[7], data));
+            }
+        }
+        if (data == AUG && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "AUG_AR" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(AUG.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[8]);
+                ShowUpgrading(8);
+                StartCoroutine(StartUpgrading(AllGuns[8], data));
+            }
+        }
+        if (data == AR15 && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "AR15_AR" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(AR15.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[9]);
+                ShowUpgrading(9);
+                StartCoroutine(StartUpgrading(AllGuns[9], data));
+            }
+        }
+        if (data == FAMAS && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "FAMAS_AR" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(FAMAS.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[10]);
+                ShowUpgrading(10);
+                StartCoroutine(StartUpgrading(AllGuns[10], data));
+            }
+        }
+        if (data == Revolver && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "Revolver_Pistol" && allowUpgrade) 
+        {
+            int amount = Mathf.RoundToInt(Revolver.price + upgradeCost);
+            if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
+            {
+                Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
+                PlayerInventory.instance.RemoveGun(AllGuns[11]);
+                ShowUpgrading(11);
+                StartCoroutine(StartUpgrading(AllGuns[11], data));
+            }
+        }
     }
 
     private IEnumerator StartUpgrading(GameObject type, GunData data)
@@ -104,6 +203,7 @@ public class UpgradeShop : MonoBehaviour
         data.RuntimeMaxRange = data.upgradedMaxRange;
         data.RuntimeReloadSpeed = data.upgradedReloadSpeed;
         PlayerInventory.instance.EquipGun(type);
+        AllGuns[currentIndex].GetComponentInChildren<Renderer>().material = decal;
 
         foreach(GameObject gun in ShowcaseGuns)
         {
@@ -113,16 +213,5 @@ public class UpgradeShop : MonoBehaviour
         upgradeComplete = false;
         isCollected = false;
         allowUpgrade = true;
-    }
-
-    public void RemoveUpgrade(GunData data)
-    {
-        data.RuntimeUpgraded = false;
-        data.RuntimeDamage = data.damage;
-        data.RuntimeAmmo = data.ammo;
-        data.RuntimeMagazine = data.magazineSize;
-        data.RuntimeFireRate = data.fireRate;
-        data.RuntimeMaxRange = data.maxRange;
-        data.RuntimeReloadSpeed = data.reloadSpeed;
     }
 }

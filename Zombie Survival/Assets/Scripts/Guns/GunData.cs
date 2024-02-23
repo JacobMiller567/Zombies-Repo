@@ -46,6 +46,5 @@ public class GunData : ScriptableObject, ISerializationCallbackReceiver
         RuntimeReloadSpeed = reloadSpeed;
         RuntimeUpgraded = upgraded;
     }
-
     public void OnBeforeSerialize() {}
 }

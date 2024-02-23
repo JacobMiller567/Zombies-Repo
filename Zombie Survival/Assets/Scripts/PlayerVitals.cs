@@ -40,7 +40,6 @@ public class PlayerVitals : MonoBehaviour, Damage
     {
         if (currentHealth <= 0)
         {
-            Debug.Log("GameOver");
             Time.timeScale = 0;
         }
         moneyText.text = money.ToString();

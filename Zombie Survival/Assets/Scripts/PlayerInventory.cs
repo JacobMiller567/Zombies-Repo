@@ -45,7 +45,11 @@ public class PlayerInventory : MonoBehaviour
 
     public void UnlockGun(GameObject newGun)  
     {
-        guns.Add(newGun);
+        if (!guns.Contains(newGun))
+        {
+            guns.Add(newGun);
+        }
+        //guns.Add(newGun);
 
         if (activeGuns.Count < maxGunSlots)
         {
@@ -55,6 +59,7 @@ public class PlayerInventory : MonoBehaviour
         {
             activeGuns[gunIndex].SetActive(false);
             shop.OnGunsChanged();
+            ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
             activeGuns.RemoveAt(gunIndex); // remove current gun
             activeGuns.Insert(gunIndex, newGun); // add gun to current slot
         }
@@ -71,6 +76,7 @@ public class PlayerInventory : MonoBehaviour
         {
             activeGuns[gunIndex].SetActive(false);
             shop.OnGunsChanged();
+            ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
             activeGuns.RemoveAt(gunIndex); // remove current gun
             activeGuns.Insert(gunIndex, newGun); // add gun to current slot
         }
@@ -79,6 +85,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void RemoveGun(GameObject currentGun)
     {
+        ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
         activeGuns[gunIndex].SetActive(false);
         activeGuns.RemoveAt(gunIndex); // remove current gun
         gunIndex = (gunIndex + 1) % activeGuns.Count;
@@ -109,6 +116,19 @@ public class PlayerInventory : MonoBehaviour
     public int GetIndex()
     {
         return gunIndex;
+    }
+
+
+    public void ResetGunValues(GunData data)
+    {
+        data.RuntimeUpgraded = data.upgraded;
+        data.RuntimeDamage = data.damage;
+        data.RuntimeAmmo = data.ammo;
+        data.RuntimeMagazine = data.magazineSize;
+        data.RuntimeFireRate = data.fireRate;
+        data.RuntimeMaxRange = data.maxRange;
+        data.RuntimeReloadSpeed = data.reloadSpeed;
+        activeGuns[gunIndex].GetComponentInChildren<Renderer>().material = activeGuns[gunIndex].GetComponentInChildren<Gun>().gunDecal;
     }
 
     /*

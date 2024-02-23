@@ -6,6 +6,7 @@ public class CrosshairManager : MonoBehaviour
 {
     public static CrosshairManager Instance;
     public GameObject[] crosshairTypes;
+    [SerializeField] private RectTransform crosshairParent; // Reference to the parent RectTransform of the crosshairs
 
     private void Awake()
     {
@@ -17,6 +18,38 @@ public class CrosshairManager : MonoBehaviour
 
     public void ChangeCrosshair(string type)
     {
+        foreach (GameObject crosshair in crosshairTypes)
+        {
+            crosshair.SetActive(false);
+        }
+        switch (type)
+        {
+            case "Pistol":
+            case "HeavyPistol":
+            case "Revolver":
+                crosshairTypes[0].SetActive(true);
+                break;
+            case "MP7":
+            case "MAC11":
+                crosshairTypes[1].SetActive(true);
+                break;
+            case "DoubleBarrel":
+            case "PumpAction":
+                crosshairTypes[3].SetActive(true);
+                break;
+            case "AK47":
+            case "AR15":
+            case "FAMAS":
+                crosshairTypes[2].SetActive(true);
+                break;
+            case "Ballista":
+                crosshairTypes[4].SetActive(true);
+                break;
+            default:
+                break;
+        }
+
+        /*
         if (type == "Pistol" || type == "HeavyPistol" || type == "Revolver")
         {
             UsingPistol();
@@ -37,8 +70,19 @@ public class CrosshairManager : MonoBehaviour
         {
             UsingSniper();
         }
+        */
 
     }
+
+/*
+    private void SetCrosshairPositions(Vector3 gunPosition)
+    {
+        for (int i = 0; i < crosshairTypes.Length; i++)
+        {
+            crosshairTypes[i].transform.position = gunPosition + crosshairOffsets[i];
+        }
+    }
+*/
 
     public void UsingSniper()
     {

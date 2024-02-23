@@ -12,7 +12,7 @@ public class PurchaseUpgrade : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && shop.allowUpgrade)
+        if (other.gameObject.CompareTag("Player") && shop.allowUpgrade && PlayerInventory.instance.activeGuns.Count > 1 && !PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].GetComponentInChildren<Gun>().GetGunData().RuntimeUpgraded)
         {   
             costPopup.SetActive(true);
             costText.text = "Press E to Upgrade: " + PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].GetComponentInChildren<Gun>().GetGunData().name + " [Cost: " + (PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].GetComponentInChildren<Gun>().GetGunData().price + shop.upgradeCost).ToString()+"]";

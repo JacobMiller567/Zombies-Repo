@@ -22,9 +22,9 @@ MonoBehaviour:
   reloadSpeed: 1.5
   reloading: 0
   upgraded: 0
-  upgradedDamage: 8
+  upgradedDamage: 7
   upgradedMaxRange: 200
   upgradedAmmo: 30
-  upgradedMagazineSize: 120
-  upgradedFireRate: 180
+  upgradedMagazineSize: 140
+  upgradedFireRate: 215
   upgradedReloadSpeed: 1.75

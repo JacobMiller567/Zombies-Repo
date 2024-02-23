@@ -37,7 +37,7 @@ public class AmmoDisplay : MonoBehaviour
     public void WeaponChanged(GunData newWeapon) 
     {
         weapon = newWeapon;
-        Debug.Log(weapon.name);
+        //Debug.Log(weapon.name);
         UpdateAmmo();
     }
     

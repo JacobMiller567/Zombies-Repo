@@ -30,14 +30,15 @@ public class ZombieSpawner : MonoBehaviour
     {
         onZombieKilled.AddListener(OnDestroy); // add listener to call for enemy deaths
         ResetHealthAmount();
-        InvokeRepeating("CheckAlive", 2f, 2f); // DELETE
+        //InvokeRepeating("CheckAlive", 2f, 2f); // DELETE
     }
-
+/*
     public void CheckAlive() // DELETE
     {
         Debug.Log("Alive: " + enemiesAlive);
         Debug.Log("Left to Spawn: " + enemiesLeftToSpawn);
     }
+*/
     
     private void Start()
     {

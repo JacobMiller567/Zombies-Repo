@@ -14,27 +14,30 @@ public class Gun : MonoBehaviour
     //private AudioSource gunAudio;
     [SerializeField] private bool isShotgun;
     [SerializeField] private bool UnlimitedAmmo = false;
+    [SerializeField] private float shotgunPellets = 6;
+    [SerializeField] private float shotgunSpreadAngle = 25;
+
     float timeLastShot;
     private Coroutine reloadCoroutine;
     private bool isActive = false;
 
-    [SerializeField] private float shotgunPellets = 6;
-    [SerializeField] private float shotgunSpreadAngle = 25;
-
     // TEST BELOW //
-   // [SerializeField] private Recoil gunRecoil;
     public float recoilForce = 0.5f;
     public float recoilRecoverySpeed = 2f;
     public float maxRecoil = 2f;
     private Vector3 initialRotation;
     private Vector3 recoil;
     // END OF TEST //
+    private Gun currentGun;
+    public Material gunDecal;
     
     void OnEnable()
     {
         isActive = true;
         gunData.reloading = false;
-        CrosshairManager.Instance.ChangeCrosshair(gunData.name);
+        CrosshairManager.Instance.ChangeCrosshair(gunData.name); // Set guns crosshair
+        GunSway.Instance.weaponTransform = PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].transform; // Apply weapon sway to gun
+        currentGun = this;
     }
     void OnDisable()
     {
@@ -46,10 +49,6 @@ public class Gun : MonoBehaviour
         Shooting.inputShooting += Shoot;
         Shooting.inputReloading += StartReload;
        //gunAudio = GetComponent<AudioSource>();
-       // TEST: 
-        //recoil = Vector3.Lerp(recoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
-        //transform.localEulerAngles = initialRotation + recoil;
-
     }
 
 
@@ -115,7 +114,7 @@ public class Gun : MonoBehaviour
     {
         if (gunData.RuntimeAmmo > 0)
         {
-            if (CanShoot())
+            if (CanShoot() && currentGun.isActiveAndEnabled)
             {
                 float _recoilForce = recoilForce;
                 float _recoilRecoverySpeed = recoilRecoverySpeed;
