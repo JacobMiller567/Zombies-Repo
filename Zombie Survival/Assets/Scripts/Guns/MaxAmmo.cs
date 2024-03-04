@@ -18,6 +18,7 @@ public class MaxAmmo : MonoBehaviour
             animator.SetTrigger("Open");
             isOpened = true;
             PlayerInventory.instance.AddAmmo();//(PlayerInventory.instance.GetIndex()); // Add ammo to current gun
+            PlayerInventory.instance.AddGrenades(); // Refill grenades
             Destroy(gameObject, .5f);
         }
     }

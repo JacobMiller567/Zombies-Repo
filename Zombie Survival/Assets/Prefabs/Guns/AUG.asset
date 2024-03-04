@@ -17,7 +17,7 @@ MonoBehaviour:
   damage: 7
   maxRange: 200
   ammo: 25
-  magazineSize: 280
+  magazineSize: 300
   fireRate: 270
   reloadSpeed: 2
   reloading: 0
@@ -25,6 +25,6 @@ MonoBehaviour:
   upgradedDamage: 9
   upgradedMaxRange: 250
   upgradedAmmo: 30
-  upgradedMagazineSize: 325
+  upgradedMagazineSize: 350
   upgradedFireRate: 330
   upgradedReloadSpeed: 1.8

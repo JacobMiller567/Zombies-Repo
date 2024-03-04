@@ -7,12 +7,10 @@ public class Gun : MonoBehaviour
     [SerializeField] private GunData gunData;
     [SerializeField] private Transform muzzle;
     [SerializeField] private ParticleSystem muzzleFlash;
-
-    //[SerializeField] private LayerMask headLayerMask; // TEST
-   // [SerializeField] private LayerMask bodyLayerMask; // TEST
-    [SerializeField] private GameObject bulletHole;
+    [SerializeField] private GameObject testHole;
     //private AudioSource gunAudio;
     [SerializeField] private bool isShotgun;
+    [SerializeField] private bool isSniper; // TEST
     [SerializeField] private bool UnlimitedAmmo = false;
     [SerializeField] private float shotgunPellets = 6;
     [SerializeField] private float shotgunSpreadAngle = 25;
@@ -30,6 +28,8 @@ public class Gun : MonoBehaviour
     // END OF TEST //
     private Gun currentGun;
     public Material gunDecal;
+    [SerializeField] private Animator animator; // TEST
+    private bool finishedReload;
     
     void OnEnable()
     {
@@ -57,18 +57,23 @@ public class Gun : MonoBehaviour
         timeLastShot += Time.deltaTime;
         Debug.DrawRay(muzzle.position, muzzle.forward);
 
-        //TEST
         recoil = Vector3.Lerp(recoil, Vector3.zero, recoilRecoverySpeed * Time.deltaTime);
         transform.localEulerAngles = initialRotation + recoil;
 
 
     }
 
+    public void FinishReload() // Animation Event
+    {
+        finishedReload = true; // TEST
+        Debug.Log("TEST");
+    }
+
     public void StartReload()
     {
         if (!gunData.reloading && isActive)
         {
-            reloadCoroutine = StartCoroutine(Reload()); 
+            reloadCoroutine = StartCoroutine(Reload());
         }
     }
     public void StopReload()
@@ -76,7 +81,8 @@ public class Gun : MonoBehaviour
         if (reloadCoroutine != null)
         {
             StopCoroutine(reloadCoroutine);
-            gunData.reloading = false; 
+            gunData.reloading = false;
+            finishedReload = false; // TEST 
         }  
     }
     private IEnumerator Reload()
@@ -88,21 +94,24 @@ public class Gun : MonoBehaviour
         }
 
         gunData.reloading = true;
+       // animator.SetBool("reloading", true);
+        animator.SetTrigger("Reloading");
+        //yield return new WaitUntil(() => finishedReload == true); // TEST
         yield return new WaitForSeconds(gunData.reloadSpeed);
 
         if (UnlimitedAmmo)
         {
             int bulletsToRefill = Mathf.Min(gunData.magazineSize, gunData.ammo - gunData.RuntimeAmmo);
             gunData.RuntimeAmmo += bulletsToRefill;
-
+            finishedReload = false; // TEST
         }
         else
         {
             int bulletsUsed = gunData.ammo - gunData.RuntimeAmmo;
             int remainingTotalAmmo = Mathf.Max(0, gunData.magazineSize - bulletsUsed);
-            // Refill the chamber with remaining total ammo, up to the maximum magazine size
             gunData.RuntimeAmmo = Mathf.Min(gunData.ammo, remainingTotalAmmo);
             gunData.RuntimeMagazine = Mathf.Max(0, gunData.RuntimeMagazine - bulletsUsed);
+            finishedReload = false; // TEST
         }
         AmmoDisplay.instance.UpdateAmmo();
         gunData.reloading = false;
@@ -122,12 +131,13 @@ public class Gun : MonoBehaviour
                 if (Shooting.Instance.isZooming)
                 {
                     _recoilForce *= 0.5f; // Make recoil easier to control
-                    _recoilRecoverySpeed *= 0.5f; // Adjust the recoil recovery speed accordingly
+                    _recoilRecoverySpeed *= 0.5f; // Adjust the recoil recovery speed
+
+                    //CrosshairManager.Instance.SetCrosshairScale(0.1f); // TEST
                 }
 
-                Vector3 raycastDirection = transform.forward; // TEST
-                //Vector3 raycastDirection = muzzle.transform.forward;
-                raycastDirection = Quaternion.Euler(recoil) * raycastDirection; //TEST
+                Vector3 raycastDirection = transform.forward;
+                raycastDirection = Quaternion.Euler(recoil) * raycastDirection; 
 
                 if (isShotgun)
                 {
@@ -137,33 +147,64 @@ public class Gun : MonoBehaviour
 
                         if (Physics.Raycast(muzzle.position, spreadDirection, out RaycastHit hitInfo, gunData.maxRange))
                         {
-                            Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                            damagable?.TakeDamage(gunData.RuntimeDamage);
+                            if (hitInfo.collider.transform.CompareTag("Head") || hitInfo.collider.CompareTag("Head")) 
+                            {   
+                                Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                                damagable?.TakeDamage(Mathf.RoundToInt(gunData.RuntimeDamage * 1.5f)); // 50% more damage
+                            }
+                            else
+                            {
+                                Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                                damagable?.TakeDamage(gunData.RuntimeDamage);
+                            }
                             // TEST SPREAD:
-                            Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));       
-                           // if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
-                          //  {
-                          //      Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
-                          //  }
+                            //Instantiate(testHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));       
+                            if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
+                            {
+                                GameObject bulletHole = BulletHolePool.Instance.GetBulletHole();
+
+                                Vector3 offset = new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f);
+                                bulletHole.transform.position = hitInfo.point + offset;
+                            
+                                bulletHole.transform.rotation = Quaternion.LookRotation(-hitInfo.normal);
+
+                                bulletHole.SetActive(true);
+                            }
                         }
                     }
                 }
                 else
                 {
+
                     if (Physics.Raycast(muzzle.position, raycastDirection, out RaycastHit hitInfo, gunData.maxRange))
-                    {                  
-                        Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                        damagable?.TakeDamage(gunData.RuntimeDamage);
+                    {
+                        if (hitInfo.collider.transform.CompareTag("Head") || hitInfo.collider.CompareTag("Head")) 
+                        {   
+                            Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                            damagable?.TakeDamage(Mathf.RoundToInt(gunData.RuntimeDamage * 1.5f)); // 50% more damage
+                        }
+                        else
+                        {
+                            Damage damagable = hitInfo.transform.GetComponent<Damage>();
+                            damagable?.TakeDamage(gunData.RuntimeDamage);
+                        }
 
                         if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
                         {
-                            Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
+                            GameObject bulletHole = BulletHolePool.Instance.GetBulletHole();
+
+                            Vector3 offset = new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f);
+                            bulletHole.transform.position = hitInfo.point + offset;
+                            
+                            bulletHole.transform.rotation = Quaternion.LookRotation(-hitInfo.normal);
+
+                            bulletHole.SetActive(true);
                         }
                     }
                 }
                 // gunAudio.Play();
-                recoil += new Vector3(Random.Range(-_recoilForce, _recoilForce), Random.Range(-_recoilForce, _recoilForce), 0); // TEST
-                recoil = Vector3.ClampMagnitude(recoil, maxRecoil); // TEST 
+                recoil += new Vector3(Random.Range(-_recoilForce, _recoilForce), Random.Range(-_recoilForce, _recoilForce), 0);
+                recoil = Vector3.ClampMagnitude(recoil, maxRecoil);
                 if (muzzleFlash.isPlaying)
                 { 
                     muzzleFlash.Stop();
@@ -172,34 +213,7 @@ public class Gun : MonoBehaviour
                 gunData.RuntimeAmmo--;
                 AmmoDisplay.instance.UpdateAmmo();
                 timeLastShot = 0;
-                GunShot();
-
-                /*
-                //if (((1 << hitInfo.transform.gameObject.layer) & headLayerMask) != 0)
-                if (hitInfo.transform.gameObject.layer == headLayerMask)
-                {
-                    Debug.Log("HEAD SHOT!");
-                    Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                    damagable?.TakeDamage(gunData.RuntimeDamage);
-                }
-
-                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
-                {
-                    Instantiate(bulletHole, hitInfo.point + new Vector3(hitInfo.normal.x * 0.01f, hitInfo.normal.y * 0.01f, hitInfo.normal.z * 0.01f), Quaternion.LookRotation(-hitInfo.normal));
-                }
-
-                else if (((1 << hitInfo.transform.gameObject.layer) & bodyLayerMask) != 0)
-                {
-                    Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                    damagable?.TakeDamage(gunData.RuntimeDamage);
-                    // Perform actions specific to hitting the zombie's body
-                }
-                else
-                {
-                    // Damage damagable = hitInfo.transform.GetComponent<Damage>();
-                    // damagable?.TakeDamage(gunData.RuntimeDamage);
-                }
-                */                          
+                GunShot();                      
             }
         }
     }

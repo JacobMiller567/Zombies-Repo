@@ -27,7 +27,6 @@ public class ZombieVitals : MonoBehaviour, Damage
         {
             currentHealth -= damage;
             animate.SetTrigger("Hit");
-        // Agent.speed = 0; // TEST
 
             if (currentHealth <= 0)
             {
@@ -36,9 +35,16 @@ public class ZombieVitals : MonoBehaviour, Damage
                 ZombieSpawner.onZombieKilled.Invoke();  // Call listener in Spawner
                 animate.SetBool("isDead", true);
                 isDead = true;
-                Destroy(gameObject, 0.8f); // Death Animation
+              //  Destroy(gameObject, 0.8f); // Death Animation
+                StartCoroutine(DeathDelay());
             }
         }
+    }
+
+    IEnumerator DeathDelay()
+    {
+        yield return new WaitForSeconds(.8f);
+        ZombiePoolManager.Instance.ReturnZombie(this);
     }
 
     public void IncreaseHealth(int amount)
@@ -51,6 +57,17 @@ public class ZombieVitals : MonoBehaviour, Damage
     {
         RunTimeMaxHealth = maxHealth;
         currentHealth = maxHealth;
+        isDead = false;
+    }
+
+    public void Deactivate()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
     }
 
 

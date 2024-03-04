@@ -10,7 +10,8 @@ public class Shooting : MonoBehaviour
     public static Action inputReloading;
 
     public Camera cam;
-    public Camera gunCam; 
+    public Camera gunCam;
+    public GameObject sniper;
     public float normalFov = 60;
     public float multiplier = 2;
     public float zoomTime = 1;
@@ -52,11 +53,21 @@ public class Shooting : MonoBehaviour
         {
             ZoomCamera(normalFov / multiplier);
             isZooming = true;
+            if (sniper.activeSelf)
+            {
+                sniper.GetComponent<GunScope>().ZoomAnimation(); // TEST
+
+            }
         }
         else if (cam.fieldOfView != normalFov)
         {
             ZoomCamera(normalFov);
             isZooming = false;
+            if (sniper.activeSelf)
+            {
+                sniper.GetComponent<GunScope>().HideScope(); // TEST
+
+            }
         }
     }
     private void ZoomCamera(float target)

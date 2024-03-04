@@ -12,25 +12,28 @@ public class SpinBox : MonoBehaviour
     [SerializeField] private Animator animator;
 
     private bool canBuy = false;
+    private bool spawnCoolDown = true;
+
+
+    private void OnEnable() 
+    {
+        StartCoroutine(BoxSpawned()); // TEST
+    }
+    private void OnDisable() 
+    {
+        ResetDisplay(); // TEST
+        Debug.Log("Changed");
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && !MysteryBox.instance.isSpinning)
+        if (other.gameObject.CompareTag("Player") && !MysteryBox.instance.isSpinning && !spawnCoolDown)
         {   
             costPopup.SetActive(true);
             costText.text = "Press E to spin Mystery Box [Cost: " + price.ToString()+"]";
             canBuy = true;
             StartCoroutine(CheckForPurchase());
         }
-        /*
-        if (other.gameObject.CompareTag("Player") && MysteryBox.instance.isSpinning && !MysteryBox.instance.isCollected)
-        {
-            costPopup.SetActive(true);
-            costText.text = "Press E to Claim: ";
-            canBuy = true;
-            StartCoroutine(CheckForClaim());
-        }
-        */
     }
 
     void OnTriggerStay(Collider other)
@@ -93,6 +96,16 @@ public class SpinBox : MonoBehaviour
         {
             gun.SetActive(false);
             animator.SetTrigger("Complete");
+            //StartCoroutine(BoxSpawned()); // TEST
         }
+    }
+
+    private IEnumerator BoxSpawned()
+    {
+        costPopup.SetActive(false);
+        spawnCoolDown = true;
+        yield return new WaitForSeconds(.35f);
+        spawnCoolDown = false;
+
     }
 }

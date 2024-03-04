@@ -1,2 +1,13 @@
 "fps arms" (https://skfb.ly/6R6yX) by DJMaesen is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+
+"RPG/FPS Game Assets for PC/Mobile (Industrial Set v2.0)" by Dmitrii Kutsenko https://assetstore.unity.com/packages/3d/environments/industrial/rpg-fps-game-assets-for-pc-mobile-industrial-set-v2-0-86679#publisher
+
+
+"Guns Pack: Low Poly Guns Collection" by Fun Assets https://assetstore.unity.com/packages/3d/props/guns/guns-pack-low-poly-guns-collection-192553#description
+
+
+"War FX" by Jean Moreno https://assetstore.unity.com/packages/vfx/particles/war-fx-5669
+
+
+"Modern Vending Machine (PBR)" by Snarky Pixel https://assetstore.unity.com/packages/3d/props/electronics/modern-vending-machine-pbr-127874

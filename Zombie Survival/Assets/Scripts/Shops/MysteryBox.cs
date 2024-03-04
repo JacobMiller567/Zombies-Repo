@@ -13,8 +13,8 @@ public class MysteryBox : MonoBehaviour
     public int currentBoxIndex = 0;
     public List<GameObject> availableGuns;
     public List<GameObject> displayGuns;
-    //public GameObject displayLocation;
     [SerializeField] private List<GameObject> availableBoxes;
+    [SerializeField] private int[] mysteryboxWeight = {2, 23, 18, 10, 10, 15, 10, 12}; // Thunder Gun, Heavy Pistol, Revolver, AR15, AUG, MAC11, Pump-Action Shotgun, FAMAS 
     public bool isSpinning = false;
     public int maxSpins = 2;
     public int currentSpins = 0;
@@ -104,19 +104,35 @@ public class MysteryBox : MonoBehaviour
             StartCoroutine(HideText(2));
         }
         currentSpins += 1;
-        StartCoroutine(CloseBox());
+        //StartCoroutine(CloseBox());
         //StartCoroutine(HideText());
+        Debug.Log("Spinning!");
+
+
+    /* // TEST: Weighted Mystery Box
+        int totalWeight = 100; // Total sum of weights
+        int randomNumber = Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+        int selectedGun = 0;
+        for (int i = 0; i < mysteryboxWeight.Length; i++)
+        {
+            cumulativeWeight += mysteryboxWeight[i];
+            if (randomNumber < cumulativeWeight)
+            {
+                selectedGun = i;
+                break;
+            }
+        }
+    */
     }
 
     IEnumerator HideText(int index)
     {
-        // ADD: Make it so weapon is displayed in the box
-        // ADD: Make it so player has a choice to collect weapon
         yield return new WaitForSeconds(1f);
         reward.SetActive(true);
         canCollect = true;
-        //StartCoroutine(CloseBox());
-        yield return new WaitUntil(() => isCollected || canceled); // Wait till player claims gun
+        StartCoroutine(CloseBox());
+        yield return new WaitUntil(() => isCollected || canceled); // Wait till player claims gun or runs out of time
 
         if (isCollected)
         {
@@ -128,12 +144,11 @@ public class MysteryBox : MonoBehaviour
         isSpinning = false;
         if (currentSpins > maxSpins)
         {
-            foreach (GameObject box in boxes)
+            foreach (GameObject box in boxes) // FIX: Changing boxes causing glitch where box stays open
             {
                 Debug.Log("Changing Locations");
                 box.SetActive(false);
                 boxes[Random.Range(0, boxes.Length)].SetActive(true); // Spawn random mystery box
-                //availableBoxes.
                 currentSpins = 0;
                 BoxChanged();
             }
@@ -152,25 +167,21 @@ public class MysteryBox : MonoBehaviour
         }
     }
 
-    IEnumerator CloseBox() // Glitched
+    IEnumerator CloseBox()
     {
-        if (isCollected)
-        {
-            Debug.Log("Broke out of ClosedBox 1");
-            yield break;
-        }
         if (!isCollected)
         {
-            if (isCollected)
-            {
-                Debug.Log("Broke out of ClosedBox 2");
-                yield break;
-            }
             yield return new WaitForSeconds(6f);
-            canceled = true;
-            Debug.Log("Did not collect gun!");
+            if (!isCollected)
+            {
+                canceled = true;
+                Debug.Log("Did not collect gun!");
+            }
         }
-
+        else
+        {
+            Debug.Log("Gun Collected!");
+        }
     }
 
     

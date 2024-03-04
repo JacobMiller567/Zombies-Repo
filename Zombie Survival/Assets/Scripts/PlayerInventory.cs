@@ -7,8 +7,12 @@ public class PlayerInventory : MonoBehaviour
     public static PlayerInventory instance;
     public List<GameObject> guns; // All guns unlocked
     public List<GameObject> activeGuns; // Current guns that can be used
+    public GameObject grenades;
     public int maxGunSlots = 2; // Max number of guns used at a time
+    public int maxGrenades = 4;
+    public int currentGrenades = 4;
     public int gunIndex = 0;
+    [SerializeField] private Transform throwZone;
     [SerializeField] private GunShop shop;
 
     private void Awake()
@@ -22,6 +26,7 @@ public class PlayerInventory : MonoBehaviour
     void Start()
     {
         activeGuns[gunIndex].SetActive(true);
+        currentGrenades = maxGrenades;
     }
 
     void Update()
@@ -30,6 +35,14 @@ public class PlayerInventory : MonoBehaviour
         {
             gunIndex = (gunIndex + 1) % activeGuns.Count;
             ChangeWeapon(gunIndex);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q)) // FIX: Move to new script!
+        {
+            if (currentGrenades > 0)
+            {
+                ThrowGrenade();
+            }
         }
     }
 
@@ -111,6 +124,24 @@ public class PlayerInventory : MonoBehaviour
         {
             maxGunSlots += 1;
         }
+    }
+
+    public void ThrowGrenade()
+    {
+        GameObject grenade = Instantiate(grenades, throwZone.position, Quaternion.identity);
+        Rigidbody rb = grenade.GetComponent<Rigidbody>();
+        Vector3 throwDirection = throwZone.forward;
+        rb.AddForce(throwDirection * 12f, ForceMode.Impulse);
+        Vector3 upwardsDirection = throwZone.up;
+        rb.AddForce(upwardsDirection * 2f, ForceMode.Impulse);
+        currentGrenades -= 1;
+        IconDisplay.Instance.RemoveGrenade();
+    }
+
+    public void AddGrenades()
+    {
+        currentGrenades = maxGrenades;
+        IconDisplay.Instance.AddedGrenades();
     }
 
     public int GetIndex()

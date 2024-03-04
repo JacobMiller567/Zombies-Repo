@@ -25,6 +25,6 @@ MonoBehaviour:
   upgradedDamage: 18
   upgradedMaxRange: 90
   upgradedAmmo: 6
-  upgradedMagazineSize: 100
+  upgradedMagazineSize: 115
   upgradedFireRate: 115
   upgradedReloadSpeed: 1.5

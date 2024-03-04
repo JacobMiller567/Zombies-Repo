@@ -7,6 +7,7 @@ public class CrosshairManager : MonoBehaviour
     public static CrosshairManager Instance;
     public GameObject[] crosshairTypes;
     [SerializeField] private RectTransform crosshairParent; // Reference to the parent RectTransform of the crosshairs
+    private int crosshairIndex;
 
     private void Awake()
     {
@@ -28,22 +29,28 @@ public class CrosshairManager : MonoBehaviour
             case "HeavyPistol":
             case "Revolver":
                 crosshairTypes[0].SetActive(true);
+                crosshairIndex = 0;
                 break;
             case "MP7":
             case "MAC11":
                 crosshairTypes[1].SetActive(true);
+                crosshairIndex = 1;
                 break;
             case "DoubleBarrel":
             case "PumpAction":
                 crosshairTypes[3].SetActive(true);
+                crosshairIndex = 3;
                 break;
             case "AK47":
             case "AR15":
             case "FAMAS":
+            case "AUG":
                 crosshairTypes[2].SetActive(true);
+                crosshairIndex = 2;
                 break;
             case "Ballista":
                 crosshairTypes[4].SetActive(true);
+                crosshairIndex = 4;
                 break;
             default:
                 break;
@@ -62,7 +69,7 @@ public class CrosshairManager : MonoBehaviour
         {
             UsingShotgun();
         }
-        if (type == "AK47" || type == "AR15" || type == "FAMAS")
+        if (type == "AK47" || type == "AR15" || type == "FAMAS" || type = "AUG")
         {
             UsingAssaultRifle();
         }
@@ -83,6 +90,21 @@ public class CrosshairManager : MonoBehaviour
         }
     }
 */
+
+
+/*
+    public void SetCrosshairScale(float scaleFactor) // TEST
+    {
+        crosshairParent.localScale = Vector3.one * scaleFactor;
+       // crosshairTypes[crosshairIndex].transform.localScale = Vector3.one * scaleFactor;
+
+    }
+*/
+    public void SetCrosshairScale(bool isZoomedIn)
+    {
+       // normalCrosshairImage.SetActive(!isZoomedIn);
+       // zoomedInCrosshairImage.SetActive(isZoomedIn);
+    }
 
     public void UsingSniper()
     {

@@ -12,7 +12,6 @@ public class AmmoDisplay : MonoBehaviour
     public TextMeshProUGUI ammoText;
     public int maxAmmo;
     public int getAmmo;
-    private int index;
 
     void Awake()
     {
@@ -22,40 +21,23 @@ public class AmmoDisplay : MonoBehaviour
         }
     }
 
-    void Start() // ADDED
+    void Start() 
     {
         maxAmmo = weapon.RuntimeMagazine;
         getAmmo = weapon.RuntimeAmmo;
         ammoText.text = getAmmo + "/" + maxAmmo;
-    }
-
-    void Update()
-    {
-        //DisplayAmmo();
     }
 
     public void WeaponChanged(GunData newWeapon) 
     {
         weapon = newWeapon;
-        //Debug.Log(weapon.name);
         UpdateAmmo();
     }
-    
-    /*
-    public void DisplayAmmo()
-    {
-        //maxAmmo = weapon.magazineSize;
-        maxAmmo = weapon.RuntimeMagazine;
-        getAmmo = weapon.RuntimeAmmo;
-        ammoText.text = getAmmo + "/" + maxAmmo;
-    }
-    */
 
-    public void UpdateAmmo() // ADDED
+    public void UpdateAmmo()
     {
         maxAmmo = weapon.RuntimeMagazine;
         getAmmo = weapon.RuntimeAmmo;
         ammoText.text = getAmmo + "/" + maxAmmo;
     }
-    
 }
