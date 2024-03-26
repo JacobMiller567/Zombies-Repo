@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: AK47
   price: 800
-  damage: 7
+  damage: 6
   maxRange: 200
   ammo: 32
   magazineSize: 285
@@ -22,7 +22,7 @@ MonoBehaviour:
   reloadSpeed: 2
   reloading: 0
   upgraded: 0
-  upgradedDamage: 9
+  upgradedDamage: 8
   upgradedMaxRange: 225
   upgradedAmmo: 42
   upgradedMagazineSize: 335

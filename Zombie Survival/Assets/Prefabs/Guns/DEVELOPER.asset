@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423c6c6c2583df94a9f374bf30ebd2b5, type: 3}
   m_Name: DEVELOPER
   m_EditorClassIdentifier: 
-  name: King Gun
+  name: GLITCH GUN
   price: 1000
   damage: 20
   maxRange: 300

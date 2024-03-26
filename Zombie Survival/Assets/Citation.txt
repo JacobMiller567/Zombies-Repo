@@ -11,3 +11,6 @@
 
 
 "Modern Vending Machine (PBR)" by Snarky Pixel https://assetstore.unity.com/packages/3d/props/electronics/modern-vending-machine-pbr-127874
+
+"3D Modern Menu UI" https://slimui.com/ , https://assetstore.unity.com/packages/tools/gui/3d-modern-menu-ui-116144#publisher
+

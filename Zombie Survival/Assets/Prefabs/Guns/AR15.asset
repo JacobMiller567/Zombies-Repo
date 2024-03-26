@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: AR15
   m_EditorClassIdentifier: 
   name: AR15
-  price: 950
-  damage: 8
+  price: 900
+  damage: 7
   maxRange: 200
   ammo: 28
-  magazineSize: 340
+  magazineSize: 300
   fireRate: 315
   reloadSpeed: 2.1
   reloading: 0
   upgraded: 0
-  upgradedDamage: 10
+  upgradedDamage: 9
   upgradedMaxRange: 250
   upgradedAmmo: 36
-  upgradedMagazineSize: 400
+  upgradedMagazineSize: 340
   upgradedFireRate: 390
   upgradedReloadSpeed: 1.9

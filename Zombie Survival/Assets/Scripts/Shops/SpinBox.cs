@@ -17,17 +17,20 @@ public class SpinBox : MonoBehaviour
 
     private void OnEnable() 
     {
-        StartCoroutine(BoxSpawned()); // TEST
+        //StartCoroutine(BoxSpawned()); // TEST
+        costPopup.SetActive(false);
+        MysteryBox.instance.StopCoroutine(MysteryBox.instance.CloseBox()); // Reset Mystery Box coroutine
     }
     private void OnDisable() 
     {
         ResetDisplay(); // TEST
-        Debug.Log("Changed");
+        animator.Rebind(); // TEST!
+        //Debug.Log("Changed");
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && !MysteryBox.instance.isSpinning && !spawnCoolDown)
+        if (other.gameObject.CompareTag("Player") && !MysteryBox.instance.isSpinning )//&& !spawnCoolDown)
         {   
             costPopup.SetActive(true);
             costText.text = "Press E to spin Mystery Box [Cost: " + price.ToString()+"]";
@@ -56,7 +59,7 @@ public class SpinBox : MonoBehaviour
         }
     }
 
-    IEnumerator CheckForPurchase()
+    IEnumerator CheckForPurchase() // When MysterBox is pruchased
     {
         while (canBuy && !MysteryBox.instance.isSpinning)//&& MysteryBox.instance.currentSpins <= MysteryBox.instance.maxSpins)
         {
@@ -66,7 +69,8 @@ public class SpinBox : MonoBehaviour
                 {
                     PlayerVitals.instance.money -= price;
                     MysteryBox.instance.StartSpin();
-                    animator.SetTrigger("Purchased");
+                    //animator.SetTrigger("Purchased");
+                    animator.SetBool("isPurchased", true);
                     costPopup.SetActive(false);
                     canBuy = false;
                 }
@@ -75,7 +79,7 @@ public class SpinBox : MonoBehaviour
         }
     }
 
-    IEnumerator CheckForClaim()
+    IEnumerator CheckForClaim() // When gun is collected
     {
         while (canBuy && MysteryBox.instance.canCollect)
         {
@@ -83,7 +87,8 @@ public class SpinBox : MonoBehaviour
             {
                 MysteryBox.instance.isCollected = true;
                 canBuy = false;
-                // animator.SetTrigger("Complete");
+                //animator.SetTrigger("Complete"); // TEST
+                //animator.ResetTrigger("Purchased"); // TEST
                 costPopup.SetActive(false);
             }
             yield return null;          
@@ -95,7 +100,10 @@ public class SpinBox : MonoBehaviour
         foreach(GameObject gun in displayGuns)
         {
             gun.SetActive(false);
-            animator.SetTrigger("Complete");
+            animator.SetBool("isPurchased", false);
+          //  animator.SetTrigger("Complete");
+           // animator.ResetTrigger("Complete"); // TEST
+            //animator.SetTrigger("Reset");
             //StartCoroutine(BoxSpawned()); // TEST
         }
     }
@@ -104,7 +112,7 @@ public class SpinBox : MonoBehaviour
     {
         costPopup.SetActive(false);
         spawnCoolDown = true;
-        yield return new WaitForSeconds(.35f);
+        yield return new WaitForSeconds(.5f);
         spawnCoolDown = false;
 
     }

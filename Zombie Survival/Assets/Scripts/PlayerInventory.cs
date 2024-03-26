@@ -47,40 +47,80 @@ public class PlayerInventory : MonoBehaviour
     }
 
     public void ChangeWeapon(int index) // MAKE IT SO RELOADING WILL CONTINUE AFTER SWITCHING BACK WEAPONS??
-    {    
-        foreach (var gun in activeGuns)
+    {
+        if (activeGuns.Count > 1)
         {
-            gun.SetActive(false);
+            foreach (var gun in activeGuns)
+            {
+                gun.SetActive(false);
+            }
+            activeGuns[index].SetActive(true);
+            AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());
         }
-        activeGuns[index].SetActive(true);
-        AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());
+        else if (UpgradeShop.Instance.changeToNextGun && activeGuns.Count > 0 && activeGuns.Count < 3)
+        {
+            index = (gunIndex + 1) % activeGuns.Count;
+            activeGuns[index].SetActive(true);
+            AmmoDisplay.instance?.WeaponChanged(activeGuns[index].GetComponentInChildren<Gun>().GetGunData());
+            UpgradeShop.Instance.changeToNextGun = false;
+        }   
+        else
+        {
+            Debug.Log("Only 1 gun");
+        }
     }
 
     public void UnlockGun(GameObject newGun)  
     {
-        if (!guns.Contains(newGun))
+        if (activeGuns.Contains(newGun))
+        {
+          int i = 0;
+            
+            foreach (GameObject gun in activeGuns)
+            {
+                if (gun == newGun)
+                {
+                   activeGuns[i].GetComponentInChildren<Gun>().RefillAmmo();
+                   Debug.Log("Adding ammo for: " + newGun.name);
+                   break;
+                }
+                i++;
+            }
+            //GameObject testGun = Instantiate(newGun); // TEST
+           // guns.Add(testGun); // TEST
+           // newGun = testGun;
+        }
+
+        if (!guns.Contains(newGun)) // If player has not unlocked this gun
         {
             guns.Add(newGun);
         }
-        //guns.Add(newGun);
 
-        if (activeGuns.Count < maxGunSlots)
+        if (!activeGuns.Contains(newGun)) // If player is not currently using this gun
         {
-            activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
+            if (activeGuns.Count < maxGunSlots)
+            {
+                activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
+            }
+            else 
+            {
+                activeGuns[gunIndex].SetActive(false);
+                shop.OnGunsChanged();
+                ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // reset guns values
+                activeGuns.RemoveAt(gunIndex); // remove current gun
+                activeGuns.Insert(gunIndex, newGun); // add gun to current slot
+            }
+            ChangeWeapon(gunIndex);
         }
-        else 
-        {
-            activeGuns[gunIndex].SetActive(false);
-            shop.OnGunsChanged();
-            ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
-            activeGuns.RemoveAt(gunIndex); // remove current gun
-            activeGuns.Insert(gunIndex, newGun); // add gun to current slot
-        }
-        ChangeWeapon(gunIndex);
     }
 
     public void EquipGun(GameObject newGun)
     {
+        if (activeGuns.Contains(newGun))
+        {
+            Debug.Log("Duplicate: " + newGun.name);
+        }
+
         if (activeGuns.Count < maxGunSlots) // if slots are not full
         {
             activeGuns.Insert(gunIndex, newGun); // insert gun to current slot and shift other gun to next slot
@@ -89,7 +129,7 @@ public class PlayerInventory : MonoBehaviour
         {
             activeGuns[gunIndex].SetActive(false);
             shop.OnGunsChanged();
-            ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
+            ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // reset guns values
             activeGuns.RemoveAt(gunIndex); // remove current gun
             activeGuns.Insert(gunIndex, newGun); // add gun to current slot
         }
@@ -98,14 +138,14 @@ public class PlayerInventory : MonoBehaviour
 
     public void RemoveGun(GameObject currentGun)
     {
-        ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // Reset guns values
+        ResetGunValues(activeGuns[gunIndex].GetComponentInChildren<Gun>().GetGunData()); // reset guns values
         activeGuns[gunIndex].SetActive(false);
         activeGuns.RemoveAt(gunIndex); // remove current gun
         gunIndex = (gunIndex + 1) % activeGuns.Count;
         ChangeWeapon(gunIndex);
     }
 
-    public void AddAmmo()
+    public void AddAmmo() 
     {
        activeGuns[gunIndex].GetComponentInChildren<Gun>().RefillAmmo();
     }

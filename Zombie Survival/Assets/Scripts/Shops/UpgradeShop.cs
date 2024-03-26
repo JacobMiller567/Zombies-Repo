@@ -13,6 +13,7 @@ public class UpgradeShop : MonoBehaviour
     [Header("Shop Info:")]
     [SerializeField] private float upgradeTime = 180f;
     public int upgradeCost = 500;
+    public bool changeToNextGun = false;
 
     [Header("Types of Guns:")]
     [SerializeField] private GunData Pistol;
@@ -180,9 +181,11 @@ public class UpgradeShop : MonoBehaviour
 
     private IEnumerator StartUpgrading(GameObject type, GunData data)
     {
+        changeToNextGun = true;
         allowUpgrade = false;
+        PlayerInventory.instance.ChangeWeapon(PlayerInventory.instance.GetIndex()); // TEST
         yield return new WaitForSeconds(upgradeTime);
-        // Add finish sounds!
+        // ADD finish sound!
         upgradeComplete = true;
         yield return new WaitUntil(() => isCollected); // Wait till player claims gun
         AddUpgradedWeapon(type, data);
@@ -213,5 +216,6 @@ public class UpgradeShop : MonoBehaviour
         upgradeComplete = false;
         isCollected = false;
         allowUpgrade = true;
+        changeToNextGun = false;
     }
 }

@@ -28,6 +28,7 @@ public class GunData : ScriptableObject, ISerializationCallbackReceiver
 
 
     // These values get changed throughout the game but won't save
+    // TEST: Add these to the gun script???
     [NonSerialized] public int RuntimeAmmo;
     [NonSerialized] public int RuntimeMagazine;
     [NonSerialized] public float RuntimeDamage;

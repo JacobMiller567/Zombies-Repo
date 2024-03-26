@@ -5,11 +5,9 @@ using UnityEngine;
 public class BulletHolePool : MonoBehaviour
 {
     public static BulletHolePool Instance;
-
     [SerializeField] private GameObject bulletHolePrefab;
-    [SerializeField] private int poolSize = 20;
-    private List<GameObject> bulletHolePool = new List<GameObject>();
-
+    [SerializeField] private int poolSize = 50;
+    private List<GameObject> bulletHolePool = new List<GameObject>(); // REMOVE SerializeField
     private void Awake()
     {
         if (Instance == null)
@@ -21,7 +19,6 @@ public class BulletHolePool : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void Start()
     {
         InitializePool();
@@ -36,29 +33,46 @@ public class BulletHolePool : MonoBehaviour
             bulletHolePool.Add(bulletHole);
         }
     }
-
     public GameObject GetBulletHole()
     {
-        foreach(GameObject bulletHole in bulletHolePool)
+       if (bulletHolePool.Count > 0)
+        {
+            GameObject bulletHole = bulletHolePool[0];
+            bulletHolePool.RemoveAt(0);
+            bulletHole.SetActive(true);  // Activate the bullet hole before returning
+            return bulletHole;
+        }
+
+        // If there are no inactive bullet holes available, reuse existing ones if possible
+        GameObject reusedBulletHole = ReuseBulletHole();
+        if (reusedBulletHole != null)
+        {
+            Debug.Log("Reusing bullet holes");
+            reusedBulletHole.SetActive(true);  // Activate the reused bullet hole
+            return reusedBulletHole;
+        }
+
+        Debug.Log("Pool is too large");
+        return null;
+    }
+
+    private GameObject ReuseBulletHole()
+    {
+        foreach (GameObject bulletHole in bulletHolePool)
         {
             if (!bulletHole.activeSelf)
             {
+                bulletHole.SetActive(true);  // Activate the bullet hole
                 return bulletHole;
             }
         }
-
-        // Expand pool
-        GameObject newBulletHole = Instantiate(bulletHolePrefab, Vector3.zero, Quaternion.identity);
-        newBulletHole.SetActive(false);
-        bulletHolePool.Add(newBulletHole);
-        return newBulletHole;
+        Debug.LogWarning("ERROR: All bullet holes are currently active.");
+        return null;
     }
 
     public void ReturnBulletHole(GameObject bulletHole)
     {
         bulletHole.SetActive(false);
+        bulletHolePool.Add(bulletHole);
     }
-
-
-
 }

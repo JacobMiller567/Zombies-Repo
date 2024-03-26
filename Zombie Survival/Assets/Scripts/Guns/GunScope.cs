@@ -31,7 +31,8 @@ public class GunScope : MonoBehaviour
 
     public void HideScope()
     {
-        scopeAnimator.SetBool("isZoom", false);
+      //  scopeAnimator.Rebind(); // TEST
+        //scopeAnimator.SetBool("isZoom", false);
         sniperScope.SetActive(false);
         sniperMesh.enabled = true;
         handObject.SetActive(true);
@@ -45,12 +46,12 @@ public class GunScope : MonoBehaviour
             sniperMesh.enabled = false;
             handObject.SetActive(false);
             currentlyZoomed = true;
-            scopeAnimator.SetBool("isZoom", true);
+            //scopeAnimator.SetBool("isZoom", true);
             sniperScope.SetActive(true);
         }
         else
         {
-            scopeAnimator.SetBool("isZoom", false);
+           // scopeAnimator.SetBool("isZoom", false);
             sniperScope.SetActive(false);
         }
     }

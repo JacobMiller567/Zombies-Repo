@@ -39,7 +39,10 @@ public class ZombieSpawner : MonoBehaviour
     {
         waveText.text = currentWave.ToString();
         StartCoroutine(StartGame());
+       // StartCoroutine(SpawnerManager());
     }
+
+
 
     private void Update() // Maybe put in coroutine so it doesn't check every frame?
     {
@@ -48,7 +51,7 @@ public class ZombieSpawner : MonoBehaviour
         if (timeSinceLastSpawn >= spawnSpeed && enemiesLeftToSpawn > 0 && enemiesAlive < maxZombiesAtOnce) 
         {
             SpawnEnemy();
-            //SpawnEnemyGroup(4);
+          //  SpawnEnemyGroup(3);
             enemiesLeftToSpawn--;
             enemiesAlive++;
             timeSinceLastSpawn = 0f;
@@ -59,10 +62,29 @@ public class ZombieSpawner : MonoBehaviour
         }
     }
 
+    private IEnumerator SpawnerManager()
+    {
+        while (true)
+        {
+            if (waveActive && enemiesLeftToSpawn > 0 && enemiesAlive < maxZombiesAtOnce)
+            {
+                //SpawnEnemy();
+                SpawnEnemyGroup(3);
+                enemiesLeftToSpawn--;
+                enemiesAlive++;
+            }
+            if (enemiesAlive == 0 && enemiesLeftToSpawn == 0)
+            {
+                EndWave();
+            }
+            yield return new WaitForSeconds(spawnSpeed);
+        }
+    }
+
     private void OnDestroy()
     {
         enemiesAlive--;
-        if (currentWave % 5 == 0 && enemiesLeftToSpawn == 0 && enemiesAlive == 0) // Every 5 waves
+        if (currentWave % 5 == 0 && enemiesLeftToSpawn == 0 && enemiesAlive == 0) // Every 5 waves spawn max ammo 
         {
             GameObject zombie = GameObject.FindWithTag("Zombie");
             if (zombie != null)
@@ -115,7 +137,7 @@ public class ZombieSpawner : MonoBehaviour
         currentWave++;
         if (currentWave != 1)
         {
-            PlayerVitals.instance?.IncreaseMoney(Mathf.RoundToInt((currentWave * 1.5f) + 5));
+            PlayerVitals.instance?.IncreaseMoney(Mathf.RoundToInt((currentWave * 10) + 15));
         }
         StartCoroutine(StartWave());
     }

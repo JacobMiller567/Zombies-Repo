@@ -1397,6 +1397,7 @@ Transform:
   - {fileID: 82614055986166199}
   - {fileID: 9154674876247688803}
   - {fileID: 2934703294051998411}
+  - {fileID: 5255120522065052250}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1474,6 +1475,8 @@ MonoBehaviour:
   maxHealth: 60
   RunTimeMaxHealth: 0
   moneyDropped: 10
+  bloodLocation: {fileID: 4037284155284799571}
+  nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &8177852420686461561
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1827,6 +1830,37 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1 &4037284155284799571
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5255120522065052250}
+  m_Layer: 7
+  m_Name: BloodPuddle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5255120522065052250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4037284155284799571}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: -1.2}
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2303471034042488580}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &4040629655253684786
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,13 +8,13 @@ public class PurchasePerk : MonoBehaviour
     [SerializeField] private GameObject costPopup;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private PerkShop shop;
-
     [SerializeField] private PerkData perkType;
     private bool canBuy = false;
+    private bool perkPurchased = false;
 
    void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player") && !perkPurchased)
         {   
             costPopup.SetActive(true);
             costText.text = "Press E to buy " + perkType.name + " [Cost: " + perkType.price.ToString()+"]";
@@ -43,6 +43,12 @@ public class PurchasePerk : MonoBehaviour
             yield return null;
         }
 
+    }
+
+    public void PerkBought()
+    {
+        perkPurchased = true;
+        costText.text = " ";
     }
    
 }

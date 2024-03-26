@@ -95,6 +95,37 @@ Transform:
   m_Father: {fileID: 4398282157629405927}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &207957691156739328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6984212822797624353}
+  m_Layer: 7
+  m_Name: BloodPuddle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6984212822797624353
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207957691156739328}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: -0.85}
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4950306281071163358}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &586153137167948221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2904,6 +2935,7 @@ Transform:
   - {fileID: 6512511743831497069}
   - {fileID: 2616423901970785977}
   - {fileID: 8358327957265316369}
+  - {fileID: 6984212822797624353}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2980,7 +3012,9 @@ MonoBehaviour:
   currentHealth: 25
   maxHealth: 25
   RunTimeMaxHealth: 25
-  moneyDropped: 6
+  moneyDropped: 7
+  bloodLocation: {fileID: 207957691156739328}
+  nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &3042470256438483619
 Rigidbody:
   m_ObjectHideFlags: 0

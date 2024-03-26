@@ -17,7 +17,7 @@ MonoBehaviour:
   damage: 30
   maxRange: 450
   ammo: 8
-  magazineSize: 92
+  magazineSize: 85
   fireRate: 25
   reloadSpeed: 4
   reloading: 0

@@ -10,12 +10,26 @@ public class Highlight : MonoBehaviour
     public float speed = 1;
     private Material mat;
     private Renderer ren;
+    private bool displayFlicker = false;
+    private float delayTime;
 
     private void Awake()
     {
         ren = GetComponentInChildren<Renderer>();
         mat = ren.material;
         mat.EnableKeyword("_EMISSION");
+    }
+    private void OnEnable()
+    {
+        speed = 1;
+        delayTime = 8f;
+        //displayFlicker = false;
+        //StartCoroutine(ShowHighlight());
+    }
+    private void OnDisable()
+    {
+        //displayFlicker = false;
+        //StopCoroutine(ShowHighlight()); 
     }
 
     public void Disable()
@@ -32,6 +46,28 @@ public class Highlight : MonoBehaviour
 
     private void Update()
     {
-        mat.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1)));
+        delayTime -= Time.deltaTime;
+        if (delayTime <= 0f)
+        {
+            speed = 3;
+        }
+        if (delayTime <= 4f)
+        {
+            //displayFlicker = true;
+            mat.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1)));
+        }
+    /*
+        if (displayFlicker)
+        {
+            mat.SetColor("_EmissionColor", Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time * speed, 1)));
+        }
+    */
+    }
+
+    public IEnumerator ShowHighlight()
+    {
+        yield return new WaitForSeconds(3f);
+        displayFlicker = true;
+
     }
 }

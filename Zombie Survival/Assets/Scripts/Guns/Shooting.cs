@@ -53,7 +53,7 @@ public class Shooting : MonoBehaviour
         {
             ZoomCamera(normalFov / multiplier);
             isZooming = true;
-            if (sniper.activeSelf)
+            if (sniper.activeSelf && sniper != null)
             {
                 sniper.GetComponent<GunScope>().ZoomAnimation(); // TEST
 
@@ -63,7 +63,7 @@ public class Shooting : MonoBehaviour
         {
             ZoomCamera(normalFov);
             isZooming = false;
-            if (sniper.activeSelf)
+            if (sniper.activeSelf && sniper != null && sniper.activeInHierarchy) // TEST "activeInHierarchy"
             {
                 sniper.GetComponent<GunScope>().HideScope(); // TEST
 

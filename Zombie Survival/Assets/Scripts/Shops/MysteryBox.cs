@@ -18,7 +18,11 @@ public class MysteryBox : MonoBehaviour
     public bool isSpinning = false;
     public int maxSpins = 2;
     public int currentSpins = 0;
+    public float removeGunTime = 10f;
+    private Coroutine boxCoroutine;
     private int lastLocation;
+    private float gunTimeHolder;
+    private int gunIndex;
     public bool isCollected = false;
     public bool canCollect = false;
     private bool canceled = false;
@@ -40,6 +44,7 @@ public class MysteryBox : MonoBehaviour
                 currentBoxIndex = i;
             }
         }
+        gunTimeHolder = removeGunTime;
     }
 
     public void StartSpin()
@@ -47,67 +52,51 @@ public class MysteryBox : MonoBehaviour
         isSpinning = true;
         canceled = false;
         isCollected = false;
+
         int item = Random.Range(0, 23);
         if (item == 0) // 5%
         {
             rewardText.text = "Thunder Gun";
-            canceled = true;
-            StartCoroutine(HideText(0));
+            gunIndex = 0;
         }
         if (item > 0 && item <= 5) // 25%
         {
             rewardText.text = "Heavy Pistol";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[0].SetActive(true);
-            displayGuns[0].SetActive(true);
-            StartCoroutine(HideText(0));
+            gunIndex = 0;
         }
         if (item > 5 && item <= 10) // 20%
         {
             rewardText.text = "Revolver";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[1].SetActive(true);
-            displayGuns[1].SetActive(true);
-            StartCoroutine(HideText(1));
+            gunIndex = 1;
         }
         if (item > 10 && item <= 12) // 10%
         {
             rewardText.text = "AR15";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[4].SetActive(true);
-            displayGuns[4].SetActive(true);
-            StartCoroutine(HideText(4));
+            gunIndex = 4;
         }
         if (item > 12 && item <= 14) // 10%
         {
             rewardText.text = "AUG";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[3].SetActive(true);
-            displayGuns[3].SetActive(true);
-            StartCoroutine(HideText(3));
+            gunIndex = 3;
         }
         if (item > 14 & item <= 17) // 15%
         {
             rewardText.text = "MAC11";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[5].SetActive(true);
-            displayGuns[5].SetActive(true);
-            StartCoroutine(HideText(5));
+            gunIndex = 5;
         }
         if (item > 17 && item <= 19) // 10%
         {
             rewardText.text = "Pump-Action Shotgun";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[6].SetActive(true);
-            displayGuns[6].SetActive(true);
-            StartCoroutine(HideText(6));
+            gunIndex = 6;
         }
         if (item > 19) // 15%
         {
             rewardText.text = "FAMAS";
-            boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[2].SetActive(true);
-            displayGuns[2].SetActive(true);
-            StartCoroutine(HideText(2));
+            gunIndex = 2;
         }
         currentSpins += 1;
-        //StartCoroutine(CloseBox());
-        //StartCoroutine(HideText());
-        Debug.Log("Spinning!");
-
+        StartCoroutine(HideText(gunIndex));
+       // boxCoroutine = StartCoroutine(HideText(gunIndex));
 
     /* // TEST: Weighted Mystery Box
         int totalWeight = 100; // Total sum of weights
@@ -128,13 +117,15 @@ public class MysteryBox : MonoBehaviour
 
     IEnumerator HideText(int index)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.35f);
+        //displayGuns[index].SetActive(true);
+        boxes[currentBoxIndex].GetComponent<SpinBox>().displayGuns[index].SetActive(true);
         reward.SetActive(true);
         canCollect = true;
         StartCoroutine(CloseBox());
         yield return new WaitUntil(() => isCollected || canceled); // Wait till player claims gun or runs out of time
 
-        if (isCollected)
+        if (isCollected) // If gun is collected
         {
             PlayerInventory.instance.UnlockGun(availableGuns[index]);
             StopCoroutine(CloseBox());
@@ -146,7 +137,7 @@ public class MysteryBox : MonoBehaviour
         {
             foreach (GameObject box in boxes) // FIX: Changing boxes causing glitch where box stays open
             {
-                Debug.Log("Changing Locations");
+              //  Debug.Log("Changing Locations");
                 box.SetActive(false);
                 boxes[Random.Range(0, boxes.Length)].SetActive(true); // Spawn random mystery box
                 currentSpins = 0;
@@ -154,6 +145,7 @@ public class MysteryBox : MonoBehaviour
             }
         }
         boxes[currentBoxIndex].GetComponent<SpinBox>().ResetDisplay();
+        removeGunTime = gunTimeHolder; // TEST
     }
 
     private void BoxChanged()
@@ -167,11 +159,13 @@ public class MysteryBox : MonoBehaviour
         }
     }
 
-    IEnumerator CloseBox()
+    public IEnumerator CloseBox()
     {
+        removeGunTime = gunTimeHolder; // TEST
         if (!isCollected)
         {
-            yield return new WaitForSeconds(6f);
+            removeGunTime = gunTimeHolder; // TEST
+            yield return new WaitForSeconds(removeGunTime);
             if (!isCollected)
             {
                 canceled = true;
@@ -181,6 +175,7 @@ public class MysteryBox : MonoBehaviour
         else
         {
             Debug.Log("Gun Collected!");
+            yield return true; // TEST?
         }
     }
 

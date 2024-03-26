@@ -29,6 +29,7 @@ public class PerkShop : MonoBehaviour
                 ironSkinBought = true;
                 // Make screen turn black after purchase
                 AllPerks[0].GetComponent<Renderer>().material = offMaterial;
+                ShowcasePerks[0].GetComponent<PurchasePerk>().PerkBought();
                 Debug.Log("Iron Skin Bought!");
             }
         }
@@ -41,6 +42,7 @@ public class PerkShop : MonoBehaviour
                 speedJuiceBought = true;
                 // Make screen turn black after purchase
                 AllPerks[1].GetComponent<Renderer>().material = offMaterial;
+                ShowcasePerks[1].GetComponent<PurchasePerk>().PerkBought();
                 Debug.Log("Speed Juice Bought!");
             }
         }
@@ -53,6 +55,7 @@ public class PerkShop : MonoBehaviour
                 muscleJuiceBought = true;
                 // Make screen turn black after purchase
                 AllPerks[2].GetComponent<Renderer>().material = offMaterial;
+                ShowcasePerks[2].GetComponent<PurchasePerk>().PerkBought();
                 Debug.Log("Muscle Juice Bought!");
             }
         }

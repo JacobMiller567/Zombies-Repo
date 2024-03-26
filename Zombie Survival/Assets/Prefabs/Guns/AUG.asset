@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: AUG
   m_EditorClassIdentifier: 
   name: AUG
-  price: 725
+  price: 750
   damage: 7
   maxRange: 200
   ammo: 25
   magazineSize: 300
-  fireRate: 270
+  fireRate: 280
   reloadSpeed: 2
   reloading: 0
   upgraded: 0
   upgradedDamage: 9
   upgradedMaxRange: 250
-  upgradedAmmo: 30
+  upgradedAmmo: 34
   upgradedMagazineSize: 350
-  upgradedFireRate: 330
+  upgradedFireRate: 345
   upgradedReloadSpeed: 1.8

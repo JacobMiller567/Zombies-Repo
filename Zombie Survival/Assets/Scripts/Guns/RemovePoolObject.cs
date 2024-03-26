@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class RemovePoolObject : MonoBehaviour
 {
-    public float lifespan = 1f; 
+    public float lifespan = .5f;
+    public bool isBullet;
 
-    void Start()
+    private void OnEnable()
     {
         StartCoroutine(DestroyAfterDelay());
     }
@@ -14,6 +15,18 @@ public class RemovePoolObject : MonoBehaviour
     IEnumerator DestroyAfterDelay()
     {
         yield return new WaitForSeconds(lifespan);
-        BulletHolePool.Instance.ReturnBulletHole(gameObject);
+
+        if (isBullet && BulletHolePool.Instance != null)
+        {
+            BulletHolePool.Instance.ReturnBulletHole(gameObject);
+        }
+        else if (!isBullet && BloodSplatterPool.Instance != null)
+        {
+            BloodSplatterPool.Instance.ReturnBloodSplatter(gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("Instance is Null");
+        }
     }
 }

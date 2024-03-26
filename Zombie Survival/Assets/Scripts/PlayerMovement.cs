@@ -57,13 +57,11 @@ public class PlayerMovement : MonoBehaviour
 
             if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0 && !onCooldown)
             {
-               // isRunning = true;
                 currentStamina -= staminaCost * Time.deltaTime;
                 speed = runSpeed;
             }
             else
             {
-               // isRunning = false;
                 speed = holdSpeed;
             }
 

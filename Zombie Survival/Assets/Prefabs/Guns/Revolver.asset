@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Revolver
   m_EditorClassIdentifier: 
   name: Revolver
-  price: 280
+  price: 300
   damage: 14
   maxRange: 40
   ammo: 6

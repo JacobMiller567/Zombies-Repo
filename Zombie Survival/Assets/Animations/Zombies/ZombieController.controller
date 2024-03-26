@@ -168,7 +168,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Z_Hit
-  m_Speed: 3.5
+  m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8185390127855632708}

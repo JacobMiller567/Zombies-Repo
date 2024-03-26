@@ -65,7 +65,6 @@ public class ZombieMovement : MonoBehaviour
           animator.SetBool("AttackEvent", true);
       }
   }
-  
 
   public void AttackEnd() // Animation Event
   {
