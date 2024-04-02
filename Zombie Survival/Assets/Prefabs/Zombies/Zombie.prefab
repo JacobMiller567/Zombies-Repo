@@ -3012,7 +3012,7 @@ MonoBehaviour:
   currentHealth: 25
   maxHealth: 25
   RunTimeMaxHealth: 25
-  moneyDropped: 5
+  moneyDropped: 8
   bloodLocation: {fileID: 2132519209479960668}
   nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &3042470256438483619

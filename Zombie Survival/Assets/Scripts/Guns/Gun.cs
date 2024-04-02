@@ -7,7 +7,8 @@ public class Gun : MonoBehaviour
     [SerializeField] private GunData gunData;
     [SerializeField] private Transform muzzle;
     [SerializeField] private ParticleSystem muzzleFlash;
-    //private AudioSource gunAudio;
+    [SerializeField] private AudioSource gunShootSound;
+    [SerializeField] private AudioSource gunReloadSound;
     [SerializeField] private bool isShotgun;
     [SerializeField] private bool isSniper;
     [SerializeField] private bool UnlimitedAmmo = false;
@@ -214,6 +215,7 @@ public class Gun : MonoBehaviour
                     }
                 }
                 // gunAudio.Play();
+                gunShootSound.Play();
                 if (muzzleFlash.isPlaying)
                 { 
                     muzzleFlash.Stop();

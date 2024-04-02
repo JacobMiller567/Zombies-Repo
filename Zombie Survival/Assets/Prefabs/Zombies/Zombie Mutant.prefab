@@ -1580,8 +1580,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8322647406601340701}
-  maxSpeed: 4
-  minSpeed: 3.6
+  maxSpeed: 3.8
+  minSpeed: 3.2
 --- !u!114 &8322647406601340696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1594,10 +1594,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d776f314b5b1d70488e797e7f7807017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 350
-  maxHealth: 350
-  RunTimeMaxHealth: 350
-  moneyDropped: 100
+  currentHealth: 450
+  maxHealth: 450
+  RunTimeMaxHealth: 450
+  moneyDropped: 500
   bloodLocation: {fileID: 4180811902358224176}
   nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &8322647406601340698
@@ -1659,9 +1659,9 @@ MonoBehaviour:
   coolDown: 15
   splashDamage: 10
   splashRange: 6
-  playerMask:
+  enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   explosionPrefab: {fileID: 100008, guid: 7075bd5fe1480184695a32611c15da57, type: 3}
 --- !u!1 &3214382738741550678
 GameObject:

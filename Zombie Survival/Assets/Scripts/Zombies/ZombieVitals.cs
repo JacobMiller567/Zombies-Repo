@@ -23,6 +23,7 @@ public class ZombieVitals : MonoBehaviour, Damage
     private void OnEnable() 
     {
         randomNumer = Random.Range(0, 100);
+        GetComponent<Collider>().enabled = true;
     }
 
     public void TakeDamage(float damage)
@@ -52,6 +53,7 @@ public class ZombieVitals : MonoBehaviour, Damage
 
     IEnumerator DeathDelay()
     {
+        GetComponent<Collider>().enabled = false;
         yield return new WaitForSeconds(.65f);
         GameObject bloodSplatter = BloodSplatterPool.Instance.GetBloodSplatter(); // spawn blood splatter from object pool
         bloodSplatter.transform.position = bloodLocation.transform.position; 

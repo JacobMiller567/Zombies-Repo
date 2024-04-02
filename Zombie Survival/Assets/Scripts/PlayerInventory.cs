@@ -31,7 +31,7 @@ public class PlayerInventory : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !SettingsManager.Instance.isPaused)
         {
             gunIndex = (gunIndex + 1) % activeGuns.Count;
             ChangeWeapon(gunIndex);
@@ -39,7 +39,7 @@ public class PlayerInventory : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q)) // FIX: Move to new script!
         {
-            if (currentGrenades > 0)
+            if (currentGrenades > 0 && !SettingsManager.Instance.isPaused)
             {
                 ThrowGrenade();
             }

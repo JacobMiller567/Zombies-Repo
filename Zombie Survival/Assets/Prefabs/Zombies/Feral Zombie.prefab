@@ -2995,8 +2995,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3042470256438483620}
-  maxSpeed: 3.35
-  minSpeed: 2.9
+  maxSpeed: 3.5
+  minSpeed: 3
 --- !u!114 &3042470256438483617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3012,7 +3012,7 @@ MonoBehaviour:
   currentHealth: 25
   maxHealth: 25
   RunTimeMaxHealth: 25
-  moneyDropped: 7
+  moneyDropped: 9
   bloodLocation: {fileID: 207957691156739328}
   nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &3042470256438483619

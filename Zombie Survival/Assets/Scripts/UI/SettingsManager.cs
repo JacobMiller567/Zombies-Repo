@@ -1,11 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class SoundManager : MonoBehaviour
+public class SettingsManager : MonoBehaviour
 {
+    public static SettingsManager Instance;
+
     [SerializeField] private GameObject settingsMenu;
-    private bool isPaused = false;
+    [SerializeField] private GameObject crosshairManager;
+    public bool isPaused = false;
+
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     private void Update()
     {
@@ -23,6 +36,19 @@ public class SoundManager : MonoBehaviour
             isPaused = false;
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
+    public void HideCrosshairs(TMP_Dropdown option)
+    {
+        switch (option.value)
+        {
+            case 0:
+                crosshairManager.SetActive(true);
+                break;
+            case 1:
+                crosshairManager.SetActive(false);
+                break;
         }
     }
 }

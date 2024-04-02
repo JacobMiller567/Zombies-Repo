@@ -1473,8 +1473,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 60
   maxHealth: 60
-  RunTimeMaxHealth: 0
-  moneyDropped: 10
+  RunTimeMaxHealth: 60
+  moneyDropped: 15
   bloodLocation: {fileID: 4037284155284799571}
   nukeDrop: {fileID: 3761106503000205822, guid: 94c1ae13e1093c149bca526941478f63, type: 3}
 --- !u!54 &8177852420686461561

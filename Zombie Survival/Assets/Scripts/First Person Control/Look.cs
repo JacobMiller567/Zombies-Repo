@@ -22,6 +22,18 @@ public class Look : MonoBehaviour // More complex then then other scripts
 
     void Update()
     {
+        if (!SettingsManager.Instance.isPaused) // TEST: Check if impacts FPS!
+        {
+            Vector2 smoothMouseDelta = Vector2.Scale(new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")), Vector2.one * sensitivity * smoothing); // Calculate the smoothed mouse movement in a 2D space
+            appliedMouseDelta = Vector2.Lerp(appliedMouseDelta, smoothMouseDelta, 1 / smoothing); // Linearly interpolates between the appliedMouseDelta and the smoothMouseDelta by 1 divided by the smoothing
+            currentMouseLook += appliedMouseDelta; // Add the appliedMouseDelta to the currentMouseLook
+            currentMouseLook.y = Mathf.Clamp(currentMouseLook.y, -90, 90); // This will clamp the mouse y axis betweem -90 and 90
+
+            charCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // This will cause the charCamera to rotate around its local right axis by -currentMouseLook.y
+            //gunCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // TEST
+            transform.localRotation = Quaternion.AngleAxis(currentMouseLook.x, Vector3.up); // This will cause the transform to rotate around its local up axis by currentMouseLook.x
+        }
+    /*
         Vector2 smoothMouseDelta = Vector2.Scale(new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")), Vector2.one * sensitivity * smoothing); // Calculate the smoothed mouse movement in a 2D space
         appliedMouseDelta = Vector2.Lerp(appliedMouseDelta, smoothMouseDelta, 1 / smoothing); // Linearly interpolates between the appliedMouseDelta and the smoothMouseDelta by 1 divided by the smoothing
         currentMouseLook += appliedMouseDelta; // Add the appliedMouseDelta to the currentMouseLook
@@ -30,5 +42,6 @@ public class Look : MonoBehaviour // More complex then then other scripts
         charCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // This will cause the charCamera to rotate around its local right axis by -currentMouseLook.y
         //gunCamera.localRotation = Quaternion.AngleAxis(-currentMouseLook.y, Vector3.right); // TEST
         transform.localRotation = Quaternion.AngleAxis(currentMouseLook.x, Vector3.up); // This will cause the transform to rotate around its local up axis by currentMouseLook.x
+    */
     }
 }
