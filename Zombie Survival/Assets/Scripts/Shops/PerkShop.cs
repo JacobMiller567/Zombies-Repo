@@ -7,6 +7,7 @@ public class PerkShop : MonoBehaviour
     public List<GameObject> AllPerks;
     public List<GameObject> ShowcasePerks;
     [SerializeField] private Material offMaterial;
+    [SerializeField] private AudioSource purchaseSound;
 
     [Header("Types of Perks:")]
     [SerializeField] private PerkData IronSkin;
@@ -27,10 +28,9 @@ public class PerkShop : MonoBehaviour
                 PlayerVitals.instance.money -= IronSkin.price;
                 PlayerInventory.instance.ApplyPerk(0);
                 ironSkinBought = true;
-                // Make screen turn black after purchase
                 AllPerks[0].GetComponent<Renderer>().material = offMaterial;
                 ShowcasePerks[0].GetComponent<PurchasePerk>().PerkBought();
-                Debug.Log("Iron Skin Bought!");
+                purchaseSound.Play();
             }
         }
         if (type == SpeedJuice) // Increase Speed and Stamina
@@ -40,10 +40,9 @@ public class PerkShop : MonoBehaviour
                 PlayerVitals.instance.money -= SpeedJuice.price;
                 PlayerInventory.instance.ApplyPerk(1);
                 speedJuiceBought = true;
-                // Make screen turn black after purchase
                 AllPerks[1].GetComponent<Renderer>().material = offMaterial;
                 ShowcasePerks[1].GetComponent<PurchasePerk>().PerkBought();
-                Debug.Log("Speed Juice Bought!");
+                purchaseSound.Play();
             }
         }
         if (type == MuscleJuice) // Increase Gun carry amount
@@ -53,10 +52,9 @@ public class PerkShop : MonoBehaviour
                 PlayerVitals.instance.money -= MuscleJuice.price;
                 PlayerInventory.instance.ApplyPerk(2);
                 muscleJuiceBought = true;
-                // Make screen turn black after purchase
                 AllPerks[2].GetComponent<Renderer>().material = offMaterial;
                 ShowcasePerks[2].GetComponent<PurchasePerk>().PerkBought();
-                Debug.Log("Muscle Juice Bought!");
+                purchaseSound.Play();
             }
         }
     }

@@ -42,7 +42,7 @@ public class CrosshairManager : MonoBehaviour
                 crosshairIndex = 3;
                 break;
             case "AK47":
-            case "AR15":
+            case "M16":
             case "FAMAS":
             case "AUG":
                 crosshairTypes[2].SetActive(true);

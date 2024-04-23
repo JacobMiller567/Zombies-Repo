@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class Gun : MonoBehaviour
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private AudioSource gunShootSound;
     [SerializeField] private AudioSource gunReloadSound;
+    [SerializeField] private AudioSource gunSwitchSound;
+    [SerializeField] private AudioSource noAmmoSound;
     [SerializeField] private bool isShotgun;
     [SerializeField] private bool isSniper;
     [SerializeField] private bool UnlimitedAmmo = false;
@@ -21,7 +24,7 @@ public class Gun : MonoBehaviour
     private Coroutine reloadCoroutine;
     private bool isActive = false;
     private bool isBurstFiring = false; // TEST
-    private int burstCount = 3; // TEST
+    private int burstCount = 0; // TEST
     private Gun currentGun;
     public Material gunDecal;
     [SerializeField] private Animator animator;
@@ -34,6 +37,7 @@ public class Gun : MonoBehaviour
         CrosshairManager.Instance.ChangeCrosshair(gunData.name); // Set guns crosshair
         GunSway.Instance.weaponTransform = PlayerInventory.instance.activeGuns[PlayerInventory.instance.GetIndex()].transform; // Apply weapon sway to gun
         currentGun = this;
+        gunSwitchSound.Play();
     }
     void OnDisable()
     {
@@ -132,27 +136,25 @@ public class Gun : MonoBehaviour
     {
         if (gunData.RuntimeAmmo > 0)
         {
-            if (CanShoot() && currentGun.isActiveAndEnabled)
+            if (CanShoot() && currentGun.isActiveAndEnabled && burstCount < 3) // TEST: burstCount < 3
             {
                 gunRecoil.ApplyRecoil();
-                
-                /*
-                if (Shooting.Instance.isZooming)
-                {
-                    //CrosshairManager.Instance.SetCrosshairScale(0.1f); // TEST
-                }
-                */
-                if (usesBurstFireRate && !isBurstFiring)
-                {
-                    StartCoroutine(BurstFire());
-                }
-
-
                 Vector3 raycastDirection = transform.forward;
-               // Vector3 raycastDirection = muzzle.forward;
-                //raycastDirection = Quaternion.Euler(recoil) * raycastDirection; 
 
-                if (isShotgun)
+                CheckForSlotButtons(); // TEST
+
+                if (usesBurstFireRate)
+                {
+                    if (!isBurstFiring)
+                    {
+                        StartCoroutine(BurstFire());
+                    }
+                }
+                //Vector3 raycastDirection = transform.forward;
+               // Vector3 raycastDirection = muzzle.forward;
+                //raycastDirection = Quaternion.Euler(recoil) * raycastDirection;
+
+                if (isShotgun) // Used for shotguns
                 {
                     for (int i = 0; i < shotgunPellets; i++)
                     {
@@ -185,9 +187,8 @@ public class Gun : MonoBehaviour
                         }
                     }
                 }
-                else
+                else // Used for all other guns
                 {
-
                     if (Physics.Raycast(muzzle.position, raycastDirection, out RaycastHit hitInfo, gunData.RuntimeMaxRange))
                     {
                         if (hitInfo.collider.transform.CompareTag("Head") || hitInfo.collider.CompareTag("Head")) 
@@ -212,9 +213,11 @@ public class Gun : MonoBehaviour
 
                             bulletHole.SetActive(true);
                         }
+
+                        //if (hitInfo.collider.transform.CompareTag("Button") || hitInfo.collider.CompareTag("Button")) Debug.Log("Button Tag"); // TEST
+                        //if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Button")) Debug.Log("Button Tag"); // TEST
                     }
                 }
-                // gunAudio.Play();
                 gunShootSound.Play();
                 if (muzzleFlash.isPlaying)
                 { 
@@ -224,7 +227,29 @@ public class Gun : MonoBehaviour
                 gunData.RuntimeAmmo--;
                 AmmoDisplay.instance.UpdateAmmo();
                 timeLastShot = 0;
-                GunShot();                      
+                GunShot();
+                   
+            }
+        }
+        /*
+        else
+        {
+            noAmmoSound.Play();
+        }
+        */
+    }
+
+    private void CheckForSlotButtons() // TEST
+    {
+        Vector3 raycastDirection = transform.forward;
+        if (Physics.Raycast(transform.position, raycastDirection, out RaycastHit hitInfo, gunData.RuntimeMaxRange, LayerMask.GetMask("Button")))
+        { // muzzle
+            if (hitInfo.collider.CompareTag("Button")) // If play button is shot
+            {
+                Debug.Log("Button Pressed!");
+                //PlayButton.GetComponent<Button>().onClick.AddListener();
+                Button PlayButton = hitInfo.collider.GetComponent<Button>();
+                PlayButton.onClick.Invoke();
             }
         }
     }
@@ -247,15 +272,15 @@ public class Gun : MonoBehaviour
         return spreadDirection.normalized;
     }
 
-    private IEnumerator BurstFire() // TEST
-    {
+    private IEnumerator BurstFire() // BUG: Does 3 round burst only if you shoot gun once and let go of shoot
+    { 
         isBurstFiring = true;
         while (burstCount < 3)//gunData.burstCount) // Control burst fire count
         {
             Shoot();
             burstCount++;
             //yield return new WaitForSeconds(1f / (gunData.burstRate / 60f)); // Delay between burst shots
-            yield return new WaitForSeconds(1f / (150 / 60f)); 
+            yield return new WaitForSeconds(1f / (150 / 60f)); // 0.4 seconds
         }
         burstCount = 0; 
         isBurstFiring = false;

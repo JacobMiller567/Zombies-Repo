@@ -8,6 +8,7 @@ TagManager:
   - FxTemporaire
   - Zombie
   - Head
+  - Button
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - Gun
   - Wall
   - Head
-  - 
+  - Button
   - 
   - 
   - 

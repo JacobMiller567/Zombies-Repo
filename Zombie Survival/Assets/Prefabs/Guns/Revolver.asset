@@ -18,7 +18,7 @@ MonoBehaviour:
   maxRange: 40
   ammo: 6
   magazineSize: 84
-  fireRate: 85
+  fireRate: 80
   reloadSpeed: 2.5
   reloading: 0
   upgraded: 0

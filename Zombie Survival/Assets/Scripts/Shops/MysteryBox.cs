@@ -71,7 +71,7 @@ public class MysteryBox : MonoBehaviour
         }
         if (item > 10 && item <= 12) // 10%
         {
-            rewardText.text = "AR15";
+            rewardText.text = "M16";
             gunIndex = 4;
         }
         if (item > 12 && item <= 14) // 10%

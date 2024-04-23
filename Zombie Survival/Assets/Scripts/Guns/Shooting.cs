@@ -12,6 +12,7 @@ public class Shooting : MonoBehaviour
     public Camera cam;
     public Camera gunCam;
     public GameObject sniper;
+    public GameObject AUG;
     public float normalFov = 60;
     public float multiplier = 2;
     public float zoomTime = 1;
@@ -56,7 +57,10 @@ public class Shooting : MonoBehaviour
             if (sniper.activeSelf && sniper != null)
             {
                 sniper.GetComponent<GunScope>().ZoomAnimation(); // TEST
-
+            }
+            if (AUG.activeSelf && AUG != null)
+            {
+                AUG.GetComponent<GunScope>().ZoomAnimation(); // TEST
             }
         }
         else if (cam.fieldOfView != normalFov)
@@ -66,6 +70,11 @@ public class Shooting : MonoBehaviour
             if (sniper.activeSelf && sniper != null && sniper.activeInHierarchy) // TEST "activeInHierarchy"
             {
                 sniper.GetComponent<GunScope>().HideScope(); // TEST
+
+            }
+            if (AUG.activeSelf && AUG != null && AUG.activeInHierarchy) // TEST "activeInHierarchy"
+            {
+                AUG.GetComponent<GunScope>().HideScope(); // TEST
 
             }
         }

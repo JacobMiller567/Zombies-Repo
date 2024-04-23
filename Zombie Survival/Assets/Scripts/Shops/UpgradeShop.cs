@@ -9,7 +9,8 @@ public class UpgradeShop : MonoBehaviour
     public List<GameObject> ShowcaseGuns;
 
     [SerializeField] private Material decal;
-
+    [SerializeField] private AudioSource upgradingSound;
+    [SerializeField] private AudioSource finishSound;
     [Header("Shop Info:")]
     [SerializeField] private float upgradeTime = 180f;
     public int upgradeCost = 500;
@@ -25,7 +26,7 @@ public class UpgradeShop : MonoBehaviour
     [SerializeField] private GunData MAC11;
     [SerializeField] private GunData Ballista;
     [SerializeField] private GunData AUG;
-    [SerializeField] private GunData AR15;
+    [SerializeField] private GunData M16;
     [SerializeField] private GunData FAMAS;
     [SerializeField] private GunData Revolver;
 
@@ -144,9 +145,9 @@ public class UpgradeShop : MonoBehaviour
                 StartCoroutine(StartUpgrading(AllGuns[8], data));
             }
         }
-        if (data == AR15 && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "AR15_AR" && allowUpgrade) 
+        if (data == M16 && PlayerInventory.instance.activeGuns[PlayerInventory.instance.gunIndex].name == "M16_AR" && allowUpgrade) 
         {
-            int amount = Mathf.RoundToInt(AR15.price + upgradeCost);
+            int amount = Mathf.RoundToInt(M16.price + upgradeCost);
             if (PlayerVitals.instance.money >= amount && !data.RuntimeUpgraded)
             {
                 Mathf.RoundToInt(PlayerVitals.instance.money -= amount);
@@ -184,8 +185,10 @@ public class UpgradeShop : MonoBehaviour
         changeToNextGun = true;
         allowUpgrade = false;
         PlayerInventory.instance.ChangeWeapon(PlayerInventory.instance.GetIndex()); // TEST
+        upgradingSound.Play();
         yield return new WaitForSeconds(upgradeTime);
         // ADD finish sound!
+        finishSound.Play();
         upgradeComplete = true;
         yield return new WaitUntil(() => isCollected); // Wait till player claims gun
         AddUpgradedWeapon(type, data);
